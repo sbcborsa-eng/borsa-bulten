@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="tr">
 <head>
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src 'self'; img-src data:; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src 'self' https://berna-mac-mini.tail0deaae.ts.net; img-src data:; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="no-referrer">
 <script>window.STATIC_SITE = true;</script>
 <meta charset="utf-8">
@@ -82,6 +82,17 @@
       <div class="tools"><button id="copy">Kopyala</button><button id="dl">İndir (.md)</button><button id="print">Yazdır / PDF</button></div>
     </div>
     <div id="analysis" class="muted">Bir tarih seçip “Analiz et”e bas.</div>
+  </section>
+
+  <section class="card" id="chatCard" hidden>
+    <h2>Bültene soru sor <span class="muted">· yapay zekâ cevaplar, yanlış olabilir</span></h2>
+    <div class="bar">
+      <input id="chatQ" maxlength="300" placeholder="Örn: Bugün hacim dünden ne kadar değişti?" style="flex:1;min-width:240px" aria-label="Soru">
+      <button class="primary" id="chatGo">Sor</button>
+    </div>
+    <div class="bar" id="chatEx" style="margin-top:8px"></div>
+    <div id="chatA" style="margin-top:10px;white-space:pre-wrap" aria-live="polite"></div>
+    <p class="muted" style="margin:8px 0 0">Cevaplar yalnızca seçili günün bülten verisine dayanır; yatırım tavsiyesi değildir. Bültende endeks seviyesi yoktur, sadece sepet göstergeleri vardır.</p>
   </section>
 
   <div class="grid kpis" id="kpis"></div>
@@ -334,12 +345,42 @@ $('dlgClose').onclick = () => $('dlg').close();
 $('copy').onclick = async () => { if (!lastText) return; try { await navigator.clipboard.writeText(lastText); $('copy').textContent = 'Kopyalandı ✓'; setTimeout(() => $('copy').textContent = 'Kopyala', 1500); } catch { $('copy').textContent = 'Kopyalanamadı'; } };
 $('dl').onclick = () => { if (!lastText) return; const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([lastText], { type: 'text/markdown' })); a.download = `borsa-analiz-${cur}.md`; a.click(); URL.revokeObjectURL(a.href); };
 $('print').onclick = () => window.print();
+/* ---------- soru-cevap ---------- */
+let CHAT_URL = null, chatBusy = false;
+const ORNEKLER = ['Bugün hacim dünden ne kadar değişti?', 'BIST 30 sepeti ne yaptı?', 'Bugün endeks ne kadar getirdi?', 'En çok yükselen hisseler hangileri?', 'Açığa satış nerede yoğunlaştı?'];
+async function initChat() {
+  try { CHAT_URL = STATIC ? ((await staticGet('data/config.json')).chat_url || null) : '/api/sohbet'; } catch { CHAT_URL = null; }
+  $('chatCard').hidden = !CHAT_URL;
+  $('chatEx').innerHTML = ORNEK_HTML();
+}
+function ORNEK_HTML() { return ORNEKLER.map((q) => `<button class="chip" data-q="${esc(q)}">${esc(q)}</button>`).join(''); }
+async function ask(q) {
+  q = (q || '').trim();
+  if (chatBusy || q.length < 2 || !cur || !CHAT_URL) return;
+  chatBusy = true; $('chatGo').disabled = true;
+  const out = $('chatA'); out.className = 'muted'; out.textContent = 'Cevap hazırlanıyor… (10-40 sn sürebilir)';
+  try {
+    const r = await fetch(CHAT_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ tarih: cur, soru: q }) });
+    if (!r.ok) {
+      const j = await r.json().catch(() => ({})), d = j.detail;
+      throw new Error(typeof d === 'string' ? d : r.status === 422 ? 'Soru 2-300 karakter olmalı.' : 'Şu an cevap veremiyorum.');
+    }
+    const rd = r.body.getReader(), dec = new TextDecoder(); let text = '';
+    for (;;) { const { done, value } = await rd.read(); if (done) break; text += dec.decode(value, { stream: true }); out.className = ''; out.textContent = text; }  // textContent: HTML calistirilmaz
+  } catch (e) { out.className = 'err'; out.textContent = e.message || 'Bağlantı kurulamadı.'; }
+  chatBusy = false; $('chatGo').disabled = false;
+}
+$('chatGo').onclick = () => ask($('chatQ').value);
+$('chatQ').onkeydown = (e) => { if (e.key === 'Enter') ask(e.target.value); };
+$('chatEx').onclick = (e) => { const b = e.target.closest('button[data-q]'); if (b) { $('chatQ').value = b.dataset.q; ask(b.dataset.q); } };
+
 if (STATIC) {
   document.querySelector('.status').hidden = true;
   ['analyze', 'refresh'].forEach((id) => $(id).hidden = true);
   $('analysis').textContent = 'Bu tarih için henüz analiz yok.';
 } else checkStatus();
 loadDates();
+initChat();
 </script>
 </body>
 </html>
