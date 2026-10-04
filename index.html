@@ -119,6 +119,13 @@
   .nav a:hover { color:var(--text); } .nav a.on { color:var(--accent); box-shadow:inset 0 -2px 0 var(--accent); }
   body[data-page]:not([data-page="home"]) .ctrl > :not(.nothing) { display:none; }
   a.k { color:inherit; text-decoration:none; } a.k:hover { color:var(--accent); text-decoration:underline; }
+  .gs { position:relative; flex:1 1 280px; max-width:420px; }
+  .gs input { width:100%; box-sizing:border-box; }
+  .gs .res { position:absolute; left:0; right:0; top:100%; margin-top:4px; z-index:30; background:var(--card, #fff); border:1px solid var(--line); border-radius:10px; box-shadow:0 8px 24px rgba(0,0,0,.14); max-height:340px; overflow:auto; }
+  .gs .res a { display:flex; align-items:center; gap:10px; padding:8px 12px; color:inherit; text-decoration:none; font-size:14px; }
+  .gs .res a.on, .gs .res a:hover { background:rgba(37,99,235,.10); }
+  .gs .res .ad { color:var(--muted); font-size:12px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; flex:1; }
+  .gs .res .none { padding:10px 12px; color:var(--muted); font-size:13px; }
   .back { display:inline-block; margin-bottom:12px; color:var(--accent); text-decoration:none; font-size:14px; }
   .hh { display:flex; flex-wrap:wrap; align-items:center; gap:10px 14px; margin-bottom:6px; } .hh h1 { font-size:26px; } .hh .ad { color:var(--muted); }
   .flag { font-size:12px; font-weight:650; padding:3px 10px; border-radius:99px; border:1px solid var(--line); } .flag.up { border-color:var(--up); } .flag.dn { border-color:var(--dn); }
@@ -167,6 +174,7 @@
     <div>
       <h1>Borsa İstanbul Günlük Piyasa Paneli</h1>
     </div>
+    <div class="gs" role="search"><input id="gs" type="search" placeholder="Hisse ara… (kısayol: /)" aria-label="Hisse kodu veya şirket ara" autocomplete="off" role="combobox" aria-expanded="false" aria-controls="gsRes"><div class="res" id="gsRes" role="listbox" hidden></div></div>
     <div class="ctrl">
       <select id="date" aria-label="Rapor tarihi"></select>
       <span class="muted small" id="dayEnd">Gün sonu</span>
@@ -691,7 +699,7 @@ function renderHisse(x) {
         ${ha ? `<div><dt>İlk işlem günü</dt><dd>${gun(ha.ilk_islem)}</dd></div><div><dt>İlk gün kapanışı → güncel</dt><dd>${nf(ha.ilk_kapanis, 2)} → ${nf(ha.guncel, 2)} ${ha.getiri == null ? '' : `<span class="${cls(ha.getiri)}">(${pct(ha.getiri, 1)})</span>`}</dd></div>` : ''}</dl></section>
     </div>`;
   const gecH = `<section class="card"><h2>Son 20 işlem günü</h2><div class="tw"><table><thead><tr><th>Tarih</th><th class="r">Kapanış*</th><th class="r">Değişim</th><th class="r">Hacim (mn TL)</th></tr></thead><tbody>${son20.map((y) => `<tr><td>${trDate(y.d)}</td><td class="r">${nf(y.c, 2)}</td><td class="r ${cls(y.g)}">${arrow(y.g)} ${pct(y.g)}</td><td class="r">${nf(y.v, 1)}</td></tr>`).join('')}</tbody></table></div><p class="muted small" style="margin:8px 0 0">*Düzeltilmiş kapanış.</p></section>`;
-  box.innerHTML = `<a class="back" href="#/">← Gün sonu</a>
+  box.innerHTML = `<a class="back" id="backLink" href="${esc(GERI.href)}">← ${esc(GERI.ad)}</a>
     <div class="hh">${ikon(x.kod, 'l')}<h1>${esc(x.kod)}</h1><span class="ad">${esc(x.ad)}</span></div>
     <div class="row" style="margin:0 0 8px"><span style="font-size:24px;font-weight:650">${nf(x.kap, 2)}</span><span class="${cls(x.deg)}" style="font-weight:600">${arrow(x.deg)} ${pct(x.deg)}</span></div>
     <div class="row" style="margin-bottom:18px">${bayrak}</div>` +
@@ -707,13 +715,28 @@ function renderHisse(x) {
 
 /* ---------- yönlendirme ---------- */
 const SAYFALAR = { home: 'pgHome', endeksler: 'pgEndeks', tarama: 'pgTarama', takvim: 'pgTakvim', araci: 'pgAraci', hisse: 'pgHisse' };
+const SAYFA_AD = { home: 'Gün sonu', endeksler: 'Endeksler', tarama: 'Taramalar', takvim: 'Takvim ve Halka Arz', araci: 'Aracı Kurumlar' };
+const GERI = { href: '#/', ad: 'Gün sonu', gecmis: false };
+const kaydirma = {}; let idxSon = 0, hashSon = null, pgSon = null;
 function route() {
   const parts = location.hash.replace(/^#\/?/, '').split('/');
   const pg = SAYFALAR[parts[0]] ? parts[0] : 'home';
+  // gezinme yonu ve kaydirma konumu
+  let idx = history.state && history.state.i;
+  if (idx == null) { idx = ++idxSon; history.replaceState({ i: idx }, ''); }
+  const geri = idx < idxSon; idxSon = Math.max(idxSon, idx);
+  if (hashSon != null) kaydirma[hashSon] = window.scrollY;
+  if (pg === 'hisse') {
+    if (pgSon && pgSon !== 'hisse') { GERI.href = hashSon || '#/'; GERI.ad = SAYFA_AD[pgSon] || 'Gün sonu'; GERI.gecmis = true; }
+    else if (!GERI.gecmis) { GERI.href = '#/'; GERI.ad = 'Gün sonu'; }
+  } else GERI.gecmis = false;
   Object.entries(SAYFALAR).forEach(([k, id]) => { $(id).hidden = k !== pg; });
   document.querySelectorAll('#nav a').forEach((a) => a.classList.toggle('on', a.dataset.r === (pg === 'hisse' ? 'home' : pg)));
   document.body.dataset.page = pg === 'hisse' ? 'hisse' : pg;
-  window.scrollTo(0, 0);
+  const hedef = geri ? (kaydirma[location.hash] || 0) : 0;
+  window.scrollTo(0, hedef);
+  if (hedef) [150, 450, 900].forEach((ms) => setTimeout(() => { if (location.hash === (hashSon || '') && Math.abs(window.scrollY - hedef) > 4) window.scrollTo(0, hedef); }, ms));
+  hashSon = location.hash; pgSon = pg;
   if (pg === 'endeksler') sayfaEndeks(); else if (pg === 'tarama') sayfaTarama(); else if (pg === 'takvim') sayfaTakvim(); else if (pg === 'araci') sayfaAraci();
   else if (pg === 'hisse') sayfaHisse(decodeURIComponent(parts[1] || '').toUpperCase());
 }
@@ -739,6 +762,35 @@ $('copy').onclick = async () => { if (!lastText) return; try { await navigator.c
 $('dl').onclick = () => { if (!lastText) return; const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([lastText], { type: 'text/markdown' })); a.download = `borsa-rapor-${cur}.md`; a.click(); URL.revokeObjectURL(a.href); closeMenu(); };
 $('print').onclick = () => { closeMenu(); window.print(); };
 document.addEventListener('click', (e) => { if (!e.target.closest('#exportMenu')) closeMenu(); });
+
+/* geri bağlantısı: geldiğin yere dön (kaydırma konumu ve filtreler korunur) */
+document.addEventListener('click', (e) => { const a = e.target.closest('#backLink'); if (a && GERI.gecmis && idxSon > 1) { e.preventDefault(); history.back(); } });
+
+/* genel hisse arama */
+let gsListe = null, gsSec = -1, gsSonuc = [];
+const nz = (t) => String(t).toLocaleLowerCase('tr').replace(/ı/g, 'i').normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+async function gsYukle() { if (gsListe) return; try { gsListe = (await staticGet('data/hisse_liste.json')).map((x) => ({ ...x, _k: nz(x.kod), _a: nz(x.ad) })); } catch { gsListe = []; } }
+function gsCiz() {
+  const r = $('gsRes'), q = nz($('gs').value.trim());
+  if (!q) { r.hidden = true; $('gs').setAttribute('aria-expanded', 'false'); return; }
+  const puan = (x) => x._k === q ? 0 : x._k.startsWith(q) ? 1 : x._a.startsWith(q) ? 2 : x._a.split(' ').some((w) => w.startsWith(q)) ? 3 : x._a.includes(q) ? 4 : 9;
+  gsSonuc = (gsListe || []).map((x) => [puan(x), x]).filter((t) => t[0] < 9).sort((a, b) => a[0] - b[0] || b[1].hac_mn - a[1].hac_mn).slice(0, 8).map((t) => t[1]);
+  gsSec = gsSonuc.length ? 0 : -1;
+  r.innerHTML = gsSonuc.length ? gsSonuc.map((x, i) => `<a role="option" href="#/hisse/${encodeURIComponent(x.kod)}" class="${i === 0 ? 'on' : ''}">${ikon(x.kod, 's')}<b>${esc(x.kod)}</b><span class="ad">${esc(x.ad)}</span><span class="${cls(x.deg)} small">${pct(x.deg)}</span></a>`).join('') : '<div class="none">Eşleşen hisse yok.</div>';
+  r.hidden = false; $('gs').setAttribute('aria-expanded', 'true');
+}
+function gsKapat() { $('gsRes').hidden = true; $('gs').setAttribute('aria-expanded', 'false'); }
+$('gs').addEventListener('focus', async () => { await gsYukle(); gsCiz(); });
+$('gs').addEventListener('input', async () => { await gsYukle(); gsCiz(); });
+$('gs').addEventListener('keydown', (e) => {
+  const links = [...$('gsRes').querySelectorAll('a')];
+  if (e.key === 'ArrowDown' || e.key === 'ArrowUp') { e.preventDefault(); if (!links.length) return; gsSec = (gsSec + (e.key === 'ArrowDown' ? 1 : -1) + links.length) % links.length; links.forEach((l, i) => l.classList.toggle('on', i === gsSec)); links[gsSec].scrollIntoView({ block: 'nearest' }); }
+  else if (e.key === 'Enter' && links[gsSec]) { e.preventDefault(); location.hash = links[gsSec].getAttribute('href'); $('gs').value = ''; gsKapat(); $('gs').blur(); }
+  else if (e.key === 'Escape') { $('gs').value = ''; gsKapat(); $('gs').blur(); }
+});
+$('gsRes').addEventListener('click', (e) => { if (e.target.closest('a')) { $('gs').value = ''; gsKapat(); } });
+document.addEventListener('click', (e) => { if (!e.target.closest('.gs')) gsKapat(); });
+document.addEventListener('keydown', (e) => { if (e.key === '/' && !/^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement.tagName)) { e.preventDefault(); $('gs').focus(); } });
 
 if (STATIC) { document.querySelectorAll('.live').forEach((x) => x.hidden = true); } else checkStatus();
 ikonYukle().then(() => { loadDates(); route(); });
