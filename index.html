@@ -530,8 +530,11 @@ document.addEventListener('keydown', (e) => {   // ok tuslariyla sekme gecisi
 });
 
 /* ---------- şirket ikonları ---------- */
-let IKONLAR = new Set();
-async function ikonYukle() { try { IKONLAR = new Set(await staticGet('data/ikonlar.json')); } catch { IKONLAR = new Set(); } }
+let IKONLAR = new Set(), ARACI_LOGO = new Set();
+async function ikonYukle() {
+  try { IKONLAR = new Set(await staticGet('data/ikonlar.json')); } catch { IKONLAR = new Set(); }
+  try { ARACI_LOGO = new Set(await staticGet('data/araci_logolar.json')); } catch { ARACI_LOGO = new Set(); }
+}
 function rozet(kod, boy = '') {   // renkli harf rozeti (ikon yoksa ya da yuklenemezse)
   let h = 0; for (const c of kod) h = (h * 31 + c.charCodeAt(0)) % 360;
   return `<span class="ico av ${boy}" style="background:hsl(${h} 42% 38%)" aria-hidden="true">${esc(kod.slice(0, 2))}</span>`;
@@ -539,6 +542,9 @@ function rozet(kod, boy = '') {   // renkli harf rozeti (ikon yoksa ya da yuklen
 function ikon(kod, boy = '') {   // yerel ikon varsa resim, yoksa rozet
   if (IKONLAR.has(kod)) return `<img class="ico ${boy}" src="ikon/${encodeURIComponent(kod)}.png" data-kod="${esc(kod)}" alt="" width="24" height="24" loading="lazy" decoding="async">`;
   return rozet(kod, boy);
+}
+function araciIkon(kod) {   // aracı kurum logosu varsa resim, yoksa rozet
+  return ARACI_LOGO.has(kod) ? `<img class="ico" src="araci_logo/${encodeURIComponent(kod)}.png" data-kod="${esc(kod)}" alt="" width="24" height="24" loading="lazy" decoding="async">` : rozet(kod);
 }
 document.addEventListener('error', (e) => {   // resim yuklenemezse (ag hatasi vb.) rozete don
   const i = e.target; if (i && i.tagName === 'IMG' && i.classList.contains('ico') && i.dataset.kod) i.outerHTML = rozet(i.dataset.kod, [...i.classList].filter((c) => ['s', 'l'].includes(c)).join(' '));
@@ -648,7 +654,7 @@ async function sayfaAraci() {
   $('araTarih').textContent = '· ' + trDate(a.tarih);
   const mx = Math.max(...a.uyeler.map((x) => x.pay), 1);
   $('araTable').innerHTML = '<thead><tr><th>#</th><th>Kod</th><th>Aracı kurum</th><th class="r">Hacim (mn TL)</th><th class="r">Pay</th><th class="opt"></th></tr></thead><tbody>' +
-    a.uyeler.map((x, i) => `<tr><td>${i + 1}</td><td><b>${esc(x.kod)}</b></td><td>${esc(x.ad)}</td><td class="r">${nf(x.hacim_mn, 1)}</td><td class="r">%${nf(x.pay, 2)}</td><td class="opt" style="width:140px"><span class="pbar" style="width:${(x.pay / mx * 130).toFixed(0)}px"></span></td></tr>`).join('') + '</tbody>';
+    a.uyeler.map((x, i) => `<tr><td>${i + 1}</td><td><b>${esc(x.kod)}</b></td><td><span class="kodh">${araciIkon(x.kod)}${esc(x.ad)}</span></td><td class="r">${nf(x.hacim_mn, 1)}</td><td class="r">%${nf(x.pay, 2)}</td><td class="opt" style="width:140px"><span class="pbar" style="width:${(x.pay / mx * 130).toFixed(0)}px"></span></td></tr>`).join('') + '</tbody>';
 }
 
 /* hisse sayfası */
