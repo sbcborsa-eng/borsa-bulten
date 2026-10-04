@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="tr">
 <head>
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src 'self' https://berna-mac-mini.tail0deaae.ts.net; img-src data:; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src 'self'; img-src data:; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="no-referrer">
 <script>window.STATIC_SITE = true;</script>
 <meta charset="utf-8">
@@ -407,9 +407,11 @@ async function selectDate(date) {
 }
 
 /* ---------- soru-cevap ---------- */
+const SOHBET_ACIK = false;   // soru-cevap kutusu şimdilik kapalı; açmak için true yap ve README_SOHBET.md'ye bak
 let CHAT_URL = null, chatBusy = false;
 const ORNEKLER = ['Bugün hacim dünden ne kadar değişti?', 'BIST 30 sepeti ne yaptı?', 'Bugün endeks ne kadar getirdi?', 'En çok yükselen hisseler hangileri?', 'Açığa satış nerede yoğunlaştı?'];
 async function initChat() {
+  if (!SOHBET_ACIK) { $('chatCard').hidden = true; return; }
   try { CHAT_URL = STATIC ? ((await staticGet('data/config.json')).chat_url || null) : '/api/sohbet'; } catch { CHAT_URL = null; }
   $('chatCard').hidden = !CHAT_URL;
   $('chatEx').innerHTML = ORNEKLER.map((q) => `<button class="chip" data-q="${esc(q)}">${esc(q)}</button>`).join('');
