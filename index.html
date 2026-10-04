@@ -126,6 +126,7 @@
   .gs .res a.on, .gs .res a:hover { background:rgba(37,99,235,.10); }
   .gs .res .ad { color:var(--muted); font-size:12px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; flex:1; }
   .gs .res .none { padding:10px 12px; color:var(--muted); font-size:13px; }
+  .star { border:1px solid var(--line); background:var(--card); color:var(--text); border-radius:999px; padding:5px 14px; font-weight:600; cursor:pointer; } .star.on { color:#b7791f; border-color:#b7791f; }
   .back { display:inline-block; margin-bottom:12px; color:var(--accent); text-decoration:none; font-size:14px; }
   .hh { display:flex; flex-wrap:wrap; align-items:center; gap:10px 14px; margin-bottom:6px; } .hh h1 { font-size:26px; } .hh .ad { color:var(--muted); }
   .flag { font-size:12px; font-weight:650; padding:3px 10px; border-radius:99px; border:1px solid var(--line); } .flag.up { border-color:var(--up); } .flag.dn { border-color:var(--dn); }
@@ -184,7 +185,7 @@
   <p class="note" id="disc">Veri: Borsa İstanbul günlük bülteni. Günlük özet metin, bülten verilerinden sabit bir şablonla otomatik doldurulur; yatırım tavsiyesi değildir.</p>
 
   <nav class="nav" id="nav" aria-label="Sayfalar">
-    <a href="#/" data-r="home">Gün Sonu</a><a href="#/endeksler" data-r="endeksler">Endeksler</a><a href="#/tarama" data-r="tarama">Taramalar</a><a href="#/takvim" data-r="takvim">Takvim ve Halka Arz</a><a href="#/araci" data-r="araci">Aracı Kurumlar</a>
+    <a href="#/" data-r="home">Gün Sonu</a><a href="#/endeksler" data-r="endeksler">Endeksler</a><a href="#/izleme" data-r="izleme">İzleme Listem</a><a href="#/tarama" data-r="tarama">Taramalar</a><a href="#/takvim" data-r="takvim">Takvim ve Halka Arz</a><a href="#/araci" data-r="araci">Aracı Kurumlar</a>
   </nav>
 
   <div id="pgHome" class="pg">
@@ -265,6 +266,8 @@
     </section></div>
     </div>
   </div>
+
+  <div id="pgIzleme" class="pg" hidden><div id="izlemeBody" class="muted">Yükleniyor…</div></div>
 
   <div id="pgTarama" class="pg" hidden><div id="taramaBody" class="muted">Yükleniyor…</div></div>
 
@@ -571,14 +574,14 @@ function cizgi(el, pts, opt = {}) {
   let grid = ''; for (let k = 0; k <= 4; k++) { const v = mn + (mx - mn) * k / 4, y = Y(v); grid += `<line x1="${pl}" x2="${W - pr}" y1="${y.toFixed(1)}" y2="${y.toFixed(1)}" class="gl"/><text x="${pl - 6}" y="${(y + 4).toFixed(1)}" text-anchor="end" class="gt">${esc(fmt(v))}</text>`; }
   const xl = [0, Math.floor((n - 1) / 2), n - 1].filter((v, i, a) => a.indexOf(v) === i).map((i) => `<text x="${X(i).toFixed(1)}" y="${H - 6}" text-anchor="${i === 0 ? 'start' : i === n - 1 ? 'end' : 'middle'}" class="gt">${esc(lab(pts[i][0]))}</text>`).join('');
   el.innerHTML = `<svg viewBox="0 0 ${W} ${H}" class="chart" role="img" aria-label="${esc(opt.aria || 'Grafik')}">${grid}${xl}<path d="${d}L${X(n - 1).toFixed(1)} ${H - pb}L${X(0).toFixed(1)} ${H - pb}Z" class="ar"/><path d="${d}" class="ln"/>
-    <line class="cx" y1="${pt}" y2="${H - pb}" x1="0" x2="0" hidden/><circle class="cc" r="4" hidden/><g class="tp" hidden><rect rx="6" width="150" height="38"/><text class="t1" x="8" y="16"></text><text class="t2" x="8" y="31"></text></g></svg>`;
+    <line class="cx" y1="${pt}" y2="${H - pb}" x1="0" x2="0" hidden/><circle class="cc" r="4" hidden/><g class="tp" hidden><rect rx="6" width="170" height="${opt.extra ? 54 : 38}"/><text class="t1" x="8" y="16"></text><text class="t2" x="8" y="31"></text><text class="t3" x="8" y="46"></text></g></svg>`;
   const svg = el.firstElementChild, cx = svg.querySelector('.cx'), cc = svg.querySelector('.cc'), tp = svg.querySelector('.tp');
   const move = (e) => {
     const rc = svg.getBoundingClientRect(), px = (e.clientX - rc.left) / rc.width * W;
     const i = Math.max(0, Math.min(n - 1, Math.round((px - pl) / (W - pl - pr) * (n - 1)))), x = X(i), y = Y(pts[i][1]);
     cx.setAttribute('x1', x); cx.setAttribute('x2', x); cc.setAttribute('cx', x); cc.setAttribute('cy', y);
-    tp.setAttribute('transform', `translate(${Math.min(Math.max(x + 10, pl), W - pr - 150)} ${pt + 2})`);
-    tp.querySelector('.t1').textContent = lab(pts[i][0], true); tp.querySelector('.t2').textContent = fmt(pts[i][1]);
+    tp.setAttribute('transform', `translate(${Math.min(Math.max(x + 10, pl), W - pr - 170)} ${pt + 2})`);
+    tp.querySelector('.t1').textContent = lab(pts[i][0], true); tp.querySelector('.t2').textContent = fmt(pts[i][1]); tp.querySelector('.t3').textContent = opt.extra ? opt.extra(i) : '';
     cx.hidden = cc.hidden = tp.hidden = false;
   };
   svg.addEventListener('pointermove', move); svg.addEventListener('pointerdown', move);
@@ -690,7 +693,7 @@ function renderHisse(x) {
   dl.push(['Son 20 günde tavana / tabana yakın', `${x.tavan20} / ${x.taban20} gün`], ['Ardışık tavan / taban serisi', `${x.tavan_seri} / ${x.taban_seri} gün`]);
   const son20 = sr.d.map((d, i) => ({ d, c: sr.c[i], g: sr.g[i], v: sr.v[i] })).slice(-20).reverse();
   const fiyatH = `<section class="card"><div class="row" style="justify-content:space-between;margin-bottom:6px"><h2 style="margin:0">Fiyat</h2><div class="rng" id="hsRng">${[['1A', 21], ['3A', 63], ['6A', 126], ['Tümü', 9999]].map(([l, n]) => `<button data-n="${n}" class="${hs.n === n ? 'on' : ''}">${l}</button>`).join('')}</div></div>
-      <div id="hsChart"></div><div class="muted small" style="margin:10px 0 2px">Günlük hacim (mn TL) · yeşil/kırmızı: günlük değişim işareti</div><div id="hsVol"></div>
+      <div class="small" id="hsRet" style="margin:0 0 6px"></div><div id="hsChart"></div><div class="muted small" style="margin:10px 0 2px">Günlük hacim (mn TL) · yeşil/kırmızı: günlük değişim işareti</div><div id="hsVol"></div>
       <p class="muted small" style="margin:10px 0 0">Fiyat serisi bölünme/bedelsiz için düzeltilmiştir (günlük değişimlerin bileşiği); temettü düzeltmesi yoktur. Son kapanışa sabitlenmiştir.</p></section>`;
   const limH = `<div class="gridp">
       <section class="card" style="margin:0"><h2>Limit ve işlem bilgileri</h2><dl class="kv">${dl.map(([k, v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`).join('')}</dl></section>
@@ -702,11 +705,13 @@ function renderHisse(x) {
   box.innerHTML = `<a class="back" id="backLink" href="${esc(GERI.href)}">← ${esc(GERI.ad)}</a>
     <div class="hh">${ikon(x.kod, 'l')}<h1>${esc(x.kod)}</h1><span class="ad">${esc(x.ad)}</span></div>
     <div class="row" style="margin:0 0 8px"><span style="font-size:24px;font-weight:650">${nf(x.kap, 2)}</span><span class="${cls(x.deg)}" style="font-weight:600">${arrow(x.deg)} ${pct(x.deg)}</span></div>
-    <div class="row" style="margin-bottom:18px">${bayrak}</div>` +
+    <div class="row" style="margin-bottom:18px"><button class="star ${IZ.var(x.kod) ? 'on' : ''}" data-iz="${esc(x.kod)}">${IZ.var(x.kod) ? '★ İzleniyor' : '☆ İzle'}</button>${bayrak}</div>` +
     tabHtml('hisse', [['fiyat', 'Fiyat', fiyatH], ['gosterge', 'Göstergeler', `<section class="kpis">${kp}</section>`], ['limit', 'Limit ve takvim', limH], ['gecmis', 'Son günler', gecH]], 'Hisse bölümleri');
   const ciz = () => {
     const n = Math.min(hs.n, sr.d.length), a = sr.d.length - n, pts = sr.d.slice(a).map((d, i) => [d, sr.c[a + i]]);
-    cizgi($('hsChart'), pts, { fmt: (v) => nf(v, 2), lab: (d, tam) => tam ? trDate(d) : fmtD(d, n > 126), aria: x.kod + ' fiyat grafiği' });
+    cizgi($('hsChart'), pts, { fmt: (v) => nf(v, 2), lab: (d, tam) => tam ? trDate(d) : fmtD(d, n > 126), aria: x.kod + ' fiyat grafiği', extra: (i) => `${pct(sr.g[a + i])} gün · hacim ${nf(sr.v[a + i], 1)} mn` });
+    const ilk = pts[0][1], son = pts[pts.length - 1][1], gr = (son / ilk - 1) * 100;
+    $('hsRet').innerHTML = `Seçili dönem getirisi (${trDate(pts[0][0])} → ${trDate(pts[pts.length - 1][0])}): <b class="${cls(gr)}">${pct(gr)}</b> <span class="muted">· günlük değişimden ayrıdır</span>`;
     sutun($('hsVol'), sr.v.slice(a), sr.d.slice(a).map(trDate), sr.g.slice(a).map((v) => col(v)));
   };
   ciz();
@@ -714,8 +719,8 @@ function renderHisse(x) {
 }
 
 /* ---------- yönlendirme ---------- */
-const SAYFALAR = { home: 'pgHome', endeksler: 'pgEndeks', tarama: 'pgTarama', takvim: 'pgTakvim', araci: 'pgAraci', hisse: 'pgHisse' };
-const SAYFA_AD = { home: 'Gün sonu', endeksler: 'Endeksler', tarama: 'Taramalar', takvim: 'Takvim ve Halka Arz', araci: 'Aracı Kurumlar' };
+const SAYFALAR = { home: 'pgHome', endeksler: 'pgEndeks', izleme: 'pgIzleme', tarama: 'pgTarama', takvim: 'pgTakvim', araci: 'pgAraci', hisse: 'pgHisse' };
+const SAYFA_AD = { home: 'Gün sonu', endeksler: 'Endeksler', izleme: 'İzleme Listem', tarama: 'Taramalar', takvim: 'Takvim ve Halka Arz', araci: 'Aracı Kurumlar' };
 const GERI = { href: '#/', ad: 'Gün sonu', gecmis: false };
 const kaydirma = {}; let idxSon = 0, hashSon = null, pgSon = null;
 function route() {
@@ -737,7 +742,7 @@ function route() {
   window.scrollTo(0, hedef);
   if (hedef) [150, 450, 900].forEach((ms) => setTimeout(() => { if (location.hash === (hashSon || '') && Math.abs(window.scrollY - hedef) > 4) window.scrollTo(0, hedef); }, ms));
   hashSon = location.hash; pgSon = pg;
-  if (pg === 'endeksler') sayfaEndeks(); else if (pg === 'tarama') sayfaTarama(); else if (pg === 'takvim') sayfaTakvim(); else if (pg === 'araci') sayfaAraci();
+  if (pg === 'endeksler') sayfaEndeks(); else if (pg === 'izleme') sayfaIzleme(); else if (pg === 'tarama') sayfaTarama(); else if (pg === 'takvim') sayfaTakvim(); else if (pg === 'araci') sayfaAraci();
   else if (pg === 'hisse') sayfaHisse(decodeURIComponent(parts[1] || '').toUpperCase());
 }
 window.addEventListener('hashchange', route);
@@ -765,6 +770,20 @@ document.addEventListener('click', (e) => { if (!e.target.closest('#exportMenu')
 
 /* geri bağlantısı: geldiğin yere dön (kaydırma konumu ve filtreler korunur) */
 document.addEventListener('click', (e) => { const a = e.target.closest('#backLink'); if (a && GERI.gecmis && idxSon > 1) { e.preventDefault(); history.back(); } });
+
+/* izleme listesi (yalnızca bu tarayıcıda saklanır) */
+const IZ = { oku() { try { return JSON.parse(localStorage.getItem('izleme') || '[]'); } catch { return []; } }, yaz(l) { try { localStorage.setItem('izleme', JSON.stringify(l)); } catch {} },
+  var(k) { return this.oku().includes(k); }, degistir(k) { const l = this.oku(), i = l.indexOf(k); i < 0 ? l.push(k) : l.splice(i, 1); this.yaz(l); return i < 0; } };
+document.addEventListener('click', (e) => {
+  const b = e.target.closest('[data-iz]'); if (!b) return;
+  const on = IZ.degistir(b.dataset.iz); if (b.classList.contains('star')) { b.classList.toggle('on', on); b.textContent = on ? '★ İzleniyor' : '☆ İzle'; } else if (pgSon === 'izleme') sayfaIzleme();
+});
+async function sayfaIzleme() {
+  const box = $('izlemeBody'), l = IZ.oku(); const lst = await veri('data/hisse_liste.json', box); if (!lst) return;
+  box.className = '';
+  const m = Object.fromEntries(lst.map((x) => [x.kod, x])), rows = l.map((k) => m[k]).filter(Boolean);
+  box.innerHTML = rows.length ? `<section class="card"><h2>İzleme listem <span class="muted small">· ${rows.length} hisse · bu tarayıcıda saklanır</span></h2><div class="tw"><table><thead><tr><th>Hisse</th><th class="opt">Şirket</th><th class="r">Kapanış</th><th class="r">Değişim</th><th class="r">Hacim (mn TL)</th><th></th></tr></thead><tbody>${rows.map((x) => `<tr><td>${kodLink(x.kod)}</td><td class="opt">${esc(x.ad)}</td><td class="r">${nf(x.kap, 2)}</td><td class="r ${cls(x.deg)}">${arrow(x.deg)} ${pct(x.deg)}</td><td class="r">${nf(x.hac_mn, 1)}</td><td class="r"><button class="link" data-iz="${esc(x.kod)}" aria-label="${esc(x.kod)} izlemeden çıkar">Kaldır</button></td></tr>`).join('')}</tbody></table></div></section>` : '<section class="card"><h2>İzleme listem</h2><p class="muted" style="margin:0">Henüz hisse eklemedin. Üstteki aramadan bir hisse bul, hisse sayfasında <b>☆ İzle</b> düğmesine bas. Liste yalnızca bu tarayıcıda saklanır, sunucuya gitmez.</p></section>';
+}
 
 /* genel hisse arama */
 let gsListe = null, gsSec = -1, gsSonuc = [];
