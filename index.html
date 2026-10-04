@@ -104,8 +104,8 @@
   .menu > summary::-webkit-details-marker { display:none; }
   .menu .pop { position:absolute; right:0; top:calc(100% + 6px); background:var(--card); border:1px solid var(--line); border-radius:10px; padding:6px; display:grid; min-width:170px; z-index:6; box-shadow:0 8px 24px rgba(0,0,0,.25); }
   .menu .pop button { text-align:left; border:0; border-radius:8px; background:transparent; } .menu .pop button:hover { background:var(--card2); }
-  #aiBody ul { margin:6px 0 10px; padding-left:20px; } #aiBody li { margin:6px 0; } #aiBody p { margin:6px 0; }
-  #aiFull details { border-top:1px solid var(--line); padding:8px 0; } #aiFull summary { font-weight:600; cursor:pointer; } #aiFull p { margin:6px 0; } #aiFull ul { margin:4px 0 6px; padding-left:22px; }
+  #rpBody h3 { font-size:15px; margin:18px 0 6px; } #rpBody h3:first-child { margin-top:0; }
+  #rpBody ul { margin:4px 0 8px; padding-left:20px; } #rpBody li { margin:6px 0; } #rpBody p { margin:6px 0; }
   .err { color:var(--dn); }
 
   dialog { border:1px solid var(--line); border-radius:var(--r); background:var(--card); color:var(--text); padding:22px; width:min(440px,92vw); } dialog::backdrop { background:#0008; }
@@ -123,7 +123,7 @@
     td, th { padding:9px 8px; } .seg button { padding:8px 12px; }
     .ctrl select { flex:1; }
   }
-  @media print { body * { visibility:hidden; } #analysisCard, #analysisCard * { visibility:visible; } #analysisCard { position:absolute; left:0; top:0; width:100%; border:0; } .menu, #aiToggle { display:none; } #aiFull { display:block !important; } }
+  @media print { body * { visibility:hidden; } #raporCard, #raporCard * { visibility:visible; } #raporCard { position:absolute; left:0; top:0; width:100%; border:0; } .menu { display:none; } }
 </style>
 </head>
 <body>
@@ -135,12 +135,10 @@
     <div class="ctrl">
       <select id="date" aria-label="Rapor tarihi"></select>
       <span class="muted small" id="dayEnd">Gün sonu</span>
-      <button class="primary live" id="analyze" disabled>Analiz et</button>
-      <button class="live" id="refresh" disabled>Yeniden analiz</button>
-      <span class="status live"><span class="dot" id="dot"></span><span id="statusText">kontrol ediliyor…</span></span>
+      <span class="status live" title="Soru-cevap kutusunun kullandığı yerel model"><span class="dot" id="dot"></span><span id="statusText">kontrol ediliyor…</span></span>
     </div>
   </header>
-  <p class="note" id="disc">Veri: Borsa İstanbul günlük bülteni. Yorumlar yapay zekâ ile otomatik üretilir, hata içerebilir; yatırım tavsiyesi değildir.</p>
+  <p class="note" id="disc">Veri: Borsa İstanbul günlük bülteni. Günlük özet metin, bülten verilerinden sabit bir şablonla otomatik doldurulur; yatırım tavsiyesi değildir.</p>
 
   <section id="kpis" class="kpis" aria-label="Temel piyasa göstergeleri"></section>
 
@@ -191,17 +189,14 @@
     <p class="muted small" style="margin:10px 0 0">Cevaplar yalnızca seçili günün bülten verisine dayanır; hata içerebilir, yatırım tavsiyesi değildir. Bültende endeks seviyesi yoktur, yalnızca sepet göstergeleri vardır.</p>
   </section>
 
-  <section class="card ai" id="analysisCard" aria-labelledby="aiH">
+  <section class="card" id="raporCard" aria-labelledby="rpH">
     <div class="ai-head">
-      <h2 id="aiH">Yapay zekâ analizi</h2><span class="badge">AI özeti</span><span class="muted small" id="anaTime"></span>
+      <h2 id="rpH">Günlük piyasa özeti</h2><span class="muted small" id="rpDate"></span>
       <details class="menu" id="exportMenu"><summary>Dışa aktar ▾</summary>
         <div class="pop"><button id="copy">Kopyala</button><button id="dl">İndir (.md)</button><button id="print">Yazdır / PDF</button></div>
       </details>
     </div>
-    <div id="aiBody" class="muted">Bir tarih seç.</div>
-    <div id="aiFull" hidden></div>
-    <button id="aiToggle" class="link" hidden>Analizin tamamını oku</button>
-    <p class="muted small" style="margin:10px 0 0">Bu metin otomatik üretilmiştir; rakamlar yukarıdaki veri bölümleriyle doğrulanmalıdır.</p>
+    <div id="rpBody" class="muted">Bir tarih seç.</div>
   </section>
 
   <footer>Kaynak: Borsa İstanbul günlük bülteni. “BIST 30 / BIST 100 sepeti” göstergeleri, sepetteki hisselerin hacim ağırlıklı ortalama değişimidir; resmî endeks getirisi değildir. Bu sayfa yatırım tavsiyesi içermez.</footer>
@@ -246,43 +241,23 @@ async function api(path, opts) {
   return r;
 }
 
-/* ---------- yapay zeka analizi ---------- */
+/* ---------- günlük rapor metni (sabit şablon, sunucuda doldurulur) ---------- */
 const inline = (s) => esc(s).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>');
-function md(text) {
-  const secs = []; let c = { h: null, body: [] };
+function mdPlain(text) {
+  let html = '', list = false;
   for (const raw of text.split('\n')) {
-    const h = raw.match(/^#{1,4}\s+(.*)/);
-    if (h) { if (c.h || c.body.length) secs.push(c); c = { h: h[1], body: [] }; } else c.body.push(raw.trimEnd());
+    const line = raw.trimEnd(), li = line.match(/^\s*[-*]\s+(.*)/), h = line.match(/^#{1,4}\s+(.*)/);
+    if (li) { if (!list) { html += '<ul>'; list = true; } html += '<li>' + inline(li[1]) + '</li>'; continue; }
+    if (list) { html += '</ul>'; list = false; }
+    if (h) html += '<h3>' + inline(h[1]) + '</h3>'; else if (line) html += '<p>' + inline(line) + '</p>';
   }
-  secs.push(c);
-  return secs.filter((s) => s.h || s.body.join('').trim()).map((s) => {
-    let html = '', list = false;
-    for (const line of s.body) {
-      const li = line.match(/^\s*[-*]\s+(.*)/);
-      if (li) { if (!list) { html += '<ul>'; list = true; } html += '<li>' + inline(li[1]) + '</li>'; continue; }
-      if (list) { html += '</ul>'; list = false; }
-      if (line.startsWith('[Hata]')) html += '<p class="err">' + esc(line) + '</p>'; else if (line) html += '<p>' + inline(line) + '</p>';
-    }
-    if (list) html += '</ul>';
-    return s.h ? `<details open><summary>${inline(s.h)}</summary>${html}</details>` : html;
-  }).join('');
+  return html + (list ? '</ul>' : '');
 }
-function ozet3(text) {   // ilk bolumden ilk 3 cumle
-  const first = text.split(/^#{1,4}\s+/m).filter((x) => x.trim())[0] || '';
-  const body = first.split('\n').slice(1).join(' ').replace(/\*\*/g, '').replace(/\s+/g, ' ').trim();
-  return (body.match(/[^.!?]+[.!?]+(\s|$)/g) || [body]).map((x) => x.trim()).filter(Boolean).slice(0, 3);
+function renderRapor() {
+  lastText = data ? data.rapor : '';
+  $('rpDate').textContent = data ? '· ' + trDate(data.date) : '';
+  $('rpBody').className = ''; $('rpBody').innerHTML = lastText ? mdPlain(lastText) : '';
 }
-let fullOpen = false;
-function showAnalysis(text, extra, streaming) {
-  lastText = text; $('anaTime').textContent = extra || '';
-  const body = $('aiBody'), full = $('aiFull'), tg = $('aiToggle');
-  if (streaming) { body.className = ''; body.innerHTML = ''; full.hidden = false; full.innerHTML = md(text); tg.hidden = true; return; }
-  body.className = '';
-  body.innerHTML = '<ul>' + ozet3(text).map((x) => '<li>' + inline(x) + '</li>').join('') + '</ul>';
-  full.innerHTML = md(text); full.hidden = !fullOpen; tg.hidden = false; tg.textContent = fullOpen ? 'Özete dön' : 'Analizin tamamını oku';
-}
-$('aiToggle').onclick = () => { fullOpen = !fullOpen; $('aiFull').hidden = !fullOpen; $('aiToggle').textContent = fullOpen ? 'Özete dön' : 'Analizin tamamını oku'; };
-function noAnalysis(msg) { lastText = ''; $('aiBody').className = 'muted'; $('aiBody').textContent = msg; $('aiFull').hidden = true; $('aiToggle').hidden = true; $('anaTime').textContent = ''; }
 
 /* ---------- göstergeler ---------- */
 function kpi(label, value, sub, subCls, cap) { return `<div class="kpi"><div class="l">${label}</div><div class="v">${value}</div><div class="d ${subCls || 'muted'}">${sub || '&nbsp;'}</div>${cap ? `<div class="cap">${cap}</div>` : ''}</div>`; }
@@ -413,36 +388,22 @@ async function checkStatus() {
   try {
     const s = await (await api('/api/status')).json();
     $('dot').className = 'dot ' + (s.model_server ? 'ok' : 'bad');
-    $('statusText').textContent = s.model_server ? 'Model hazır' : 'Model sunucusu kapalı';
+    $('statusText').textContent = s.model_server ? 'Sohbet modeli hazır' : 'Sohbet modeli kapalı';
   } catch { $('dot').className = 'dot bad'; $('statusText').textContent = 'Servis yanıt vermiyor'; }
 }
 async function loadDates() {
   const list = await (await api('/api/dates')).json(), sel = $('date');
   sel.innerHTML = list.length ? '' : '<option>Rapor bulunamadı</option>';
   for (const d of list) { const o = document.createElement('option'); o.value = d.date; o.textContent = trDate(d.date); sel.appendChild(o); }
-  $('analyze').disabled = $('refresh').disabled = !list.length;
   if (list.length) selectDate(list[0].date);
 }
 async function selectDate(date) {
-  cur = date; st.shown = 80; fullOpen = false; $('chatA').textContent = '';
-  noAnalysis('Yükleniyor…');
+  cur = date; st.shown = 80; $('chatA').textContent = '';
+  $('rpBody').className = 'muted'; $('rpBody').textContent = 'Yükleniyor…';
   try {
     data = await (await api('/api/overview/' + date)).json();
-    renderKpis(); renderDev(); renderCharts(); renderCompare(); renderStocks();
-  } catch (e) { data = null; $('kpis').innerHTML = `<div class="card err" style="grid-column:1/-1">${esc(e.message)}</div>`; }
-  try { const c = await (await api('/api/analysis/' + date)).json(); showAnalysis(c.text, ''); }
-  catch { noAnalysis(STATIC ? 'Bu tarih için henüz analiz yok.' : 'Bu tarih için henüz analiz yok. “Analiz et”e bas.'); }
-}
-async function runAnalysis() {
-  if (busy || !cur) return; busy = true; $('analyze').disabled = $('refresh').disabled = true;
-  noAnalysis('Model yazıyor… (ilk yanıt 10–60 sn, tamamı ~2 dk sürebilir)');
-  const t0 = Date.now();
-  try {
-    const r = await api('/api/analyze/' + cur, { method: 'POST' }), rd = r.body.getReader(), dec = new TextDecoder(); let text = '';
-    for (;;) { const { done, value } = await rd.read(); if (done) break; text += dec.decode(value, { stream: true }); showAnalysis(text, '', true); }
-    showAnalysis(text, `· ${Math.round((Date.now() - t0) / 1000)} sn`);
-  } catch (e) { $('aiBody').className = 'err'; $('aiBody').textContent = e.message; }
-  busy = false; $('analyze').disabled = $('refresh').disabled = false; checkStatus();
+    renderKpis(); renderDev(); renderCharts(); renderCompare(); renderStocks(); renderRapor();
+  } catch (e) { data = null; lastText = ''; $('kpis').innerHTML = `<div class="card err" style="grid-column:1/-1">${esc(e.message)}</div>`; $('rpBody').textContent = ''; }
 }
 
 /* ---------- soru-cevap ---------- */
@@ -472,7 +433,6 @@ async function ask(q) {
 
 /* ---------- olaylar ---------- */
 $('date').onchange = (e) => selectDate(e.target.value);
-$('analyze').onclick = $('refresh').onclick = runAnalysis;
 $('q').oninput = (e) => { st.q = e.target.value; st.shown = 80; if (data) renderStocks(); };
 $('more').onclick = () => { st.shown += 200; renderStocks(); };
 document.querySelector('.seg').onclick = (e) => { const b = e.target.closest('button'); if (b) { st.seg = b.dataset.seg; st.shown = 80; if (data) renderStocks(); } };
@@ -488,8 +448,8 @@ $('chatQ').onkeydown = (e) => { if (e.key === 'Enter') ask(e.target.value); };
 $('chatEx').onclick = (e) => { const b = e.target.closest('button[data-q]'); if (b) { $('chatQ').value = b.dataset.q; ask(b.dataset.q); } };
 const closeMenu = () => { $('exportMenu').open = false; };
 $('copy').onclick = async () => { if (!lastText) return; try { await navigator.clipboard.writeText(lastText); $('copy').textContent = 'Kopyalandı ✓'; setTimeout(() => { $('copy').textContent = 'Kopyala'; closeMenu(); }, 1100); } catch { $('copy').textContent = 'Kopyalanamadı'; } };
-$('dl').onclick = () => { if (!lastText) return; const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([lastText], { type: 'text/markdown' })); a.download = `borsa-analiz-${cur}.md`; a.click(); URL.revokeObjectURL(a.href); closeMenu(); };
-$('print').onclick = () => { closeMenu(); fullOpen = true; $('aiFull').hidden = false; window.print(); };
+$('dl').onclick = () => { if (!lastText) return; const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([lastText], { type: 'text/markdown' })); a.download = `borsa-rapor-${cur}.md`; a.click(); URL.revokeObjectURL(a.href); closeMenu(); };
+$('print').onclick = () => { closeMenu(); window.print(); };
 document.addEventListener('click', (e) => { if (!e.target.closest('#exportMenu')) closeMenu(); });
 
 if (STATIC) { document.querySelectorAll('.live').forEach((x) => x.hidden = true); } else checkStatus();
