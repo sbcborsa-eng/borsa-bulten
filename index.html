@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="tr">
 <head>
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src 'self'; img-src data:; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src 'self'; img-src 'self' data:; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="no-referrer">
 <script>window.STATIC_SITE = true;</script>
 <meta charset="utf-8">
@@ -59,7 +59,7 @@
   /* grafikler */
   .grid { display:grid; gap:14px; } .grid > * { min-width:0; }
   .movers { grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); }
-  .hb { display:grid; grid-template-columns:4.6rem minmax(0,1fr) 4.8rem; gap:10px; align-items:center; font-size:13px; margin:7px 0; }
+  .hb { display:grid; grid-template-columns:6.4rem minmax(0,1fr) 4.8rem; gap:10px; align-items:center; font-size:13px; margin:7px 0; }
   .hb .k { font-weight:600; overflow:hidden; text-overflow:ellipsis; } .hb .n { text-align:right; white-space:nowrap; }
   .hb .track { background:color-mix(in srgb, var(--line) 70%, transparent); border-radius:5px; height:14px; overflow:hidden; }
   .hb .fill { height:100%; border-radius:5px; }
@@ -120,7 +120,7 @@
   body[data-page]:not([data-page="home"]) .ctrl > :not(.nothing) { display:none; }
   a.k { color:inherit; text-decoration:none; } a.k:hover { color:var(--accent); text-decoration:underline; }
   .back { display:inline-block; margin-bottom:12px; color:var(--accent); text-decoration:none; font-size:14px; }
-  .hh { display:flex; flex-wrap:wrap; align-items:baseline; gap:10px; margin-bottom:6px; } .hh h1 { font-size:26px; } .hh .ad { color:var(--muted); }
+  .hh { display:flex; flex-wrap:wrap; align-items:center; gap:10px 14px; margin-bottom:6px; } .hh h1 { font-size:26px; } .hh .ad { color:var(--muted); }
   .flag { font-size:12px; font-weight:650; padding:3px 10px; border-radius:99px; border:1px solid var(--line); } .flag.up { border-color:var(--up); } .flag.dn { border-color:var(--dn); }
   .rng { display:flex; gap:6px; margin-bottom:8px; } .rng button { padding:5px 12px; font-size:13px; border-radius:99px; } .rng button.on { background:var(--accent-bg); border-color:var(--accent); color:var(--accent); }
   .chart { width:100%; height:auto; display:block; touch-action:pan-y; }
@@ -133,13 +133,27 @@
   .gridp { display:grid; gap:14px; grid-template-columns:repeat(auto-fit,minmax(340px,1fr)); } .gridp > * { min-width:0; }
   @media (max-width:720px) { .gridp { grid-template-columns:minmax(0,1fr); } .hh h1 { font-size:22px; } }
 
+
+  /* alt sekmeler */
+  .tabs { display:flex; gap:8px; overflow-x:auto; margin:0 0 18px; padding-bottom:2px; -webkit-overflow-scrolling:touch; }
+  .tabs button { flex:0 0 auto; border-radius:99px; padding:7px 16px; font-size:14px; font-weight:600; color:var(--muted); background:transparent; white-space:nowrap; }
+  .tabs button:hover { color:var(--text); } .tabs button[aria-selected="true"] { background:var(--accent-bg); border-color:var(--accent); color:var(--accent); }
+  .tpanel[hidden] { display:none !important; }
+  /* ikonlar */
+  .ico { width:24px; height:24px; border-radius:6px; object-fit:contain; background:#fff; vertical-align:middle; margin-right:8px; flex:0 0 auto; }
+  .ico.s { width:18px; height:18px; border-radius:5px; margin-right:6px; } .ico.l { width:52px; height:52px; border-radius:12px; margin-right:0; padding:3px; }
+  .av { display:inline-grid; place-items:center; color:#fff; font-size:10px; font-weight:700; letter-spacing:.02em; background:#64748b; vertical-align:middle; }
+  .av.l { font-size:17px; } .av.s { font-size:8.5px; }
+  .kodh { display:inline-flex; align-items:center; white-space:nowrap; }
+  .hb .k { display:flex; align-items:center; }
+
   /* mobil */
   @media (max-width:720px) {
     main { padding:16px 12px 40px; } .card { padding:16px; } section, details.card { margin-bottom:22px; }
     h1 { font-size:19px; }
     .kpis { grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; } .kpi { padding:12px 13px; } .kpi .v { font-size:21px; }
     .movers { grid-template-columns:minmax(0,1fr); }
-    .hb { grid-template-columns:3.9rem minmax(0,1fr) 4.2rem; gap:8px; font-size:12.5px; }
+    .hb { grid-template-columns:5.6rem minmax(0,1fr) 4.2rem; gap:8px; font-size:12.5px; }
     .opt { display:none; }
     td, th { padding:9px 8px; } .seg button { padding:8px 12px; }
     .ctrl select { flex:1; }
@@ -166,19 +180,20 @@
   </nav>
 
   <div id="pgHome" class="pg">
-  <section id="kpis" class="kpis" aria-label="Temel piyasa göstergeleri"></section>
-
-  <section class="card dev" id="dev" aria-labelledby="devH"><h2 id="devH">Günün üç önemli gelişmesi</h2><ol id="devList"></ol></section>
-
-  <section class="grid movers" aria-label="Piyasa genişliği ve öne çıkanlar">
-    <div class="card"><h2>Piyasa genişliği</h2><div id="breadth"></div><div id="groups" style="margin-top:18px"></div></div>
-    <div class="card"><h2>Hacim liderleri <span class="muted small">· mn TL</span></h2><div id="chHac"></div></div>
-    <div class="card"><h2>En çok yükselenler <span class="muted small">· hacim ≥ 10 mn TL</span></h2><div id="chUp"></div></div>
-    <div class="card"><h2>En çok düşenler <span class="muted small">· hacim ≥ 10 mn TL</span></h2><div id="chDn"></div></div>
-  </section>
-
-  <details class="card" id="cmpCard" hidden>
-    <summary>Önceki rapor günüyle karşılaştırma <span class="muted small" id="cmpDates"></span></summary>
+  <div class="tabwrap" data-key="home">
+    <div class="tabs" role="tablist" aria-label="Gün sonu bölümleri">
+      <button role="tab" data-t="ozet" aria-selected="true">Özet</button><button role="tab" data-t="hareket" aria-selected="false">Yükselenler ve düşenler</button>
+      <button role="tab" data-t="onceki" aria-selected="false">Önceki günle</button><button role="tab" data-t="hisseler" aria-selected="false">Hisseler</button><button role="tab" data-t="metin" aria-selected="false">Günlük metin</button>
+    </div>
+    <div class="tpanel" data-t="ozet" role="tabpanel">
+      <section id="kpis" class="kpis" aria-label="Temel piyasa göstergeleri"></section>
+      <section class="card dev" id="dev" aria-labelledby="devH"><h2 id="devH">Günün üç önemli gelişmesi</h2><ol id="devList"></ol></section>
+      <section class="grid movers"><div class="card"><h2>Piyasa genişliği</h2><div id="breadth"></div><div id="groups" style="margin-top:18px"></div></div></section>
+    </div>
+    <div class="tpanel" data-t="hareket" role="tabpanel" hidden><section class="grid movers"><div class="card"><h2>Hacim liderleri <span class="muted small">· mn TL</span></h2><div id="chHac"></div></div><div class="card"><h2>En çok yükselenler <span class="muted small">· hacim ≥ 10 mn TL</span></h2><div id="chUp"></div></div><div class="card"><h2>En çok düşenler <span class="muted small">· hacim ≥ 10 mn TL</span></h2><div id="chDn"></div></div></section></div>
+    <div class="tpanel" data-t="onceki" role="tabpanel" hidden>
+      <section class="card" id="cmpCard" hidden>
+    <h2>Önceki rapor günüyle karşılaştırma <span class="muted small" id="cmpDates"></span></h2>
     <div class="tw" style="max-height:none"><table id="cmpTable"></table></div>
     <p class="muted small" style="margin:8px 0 0">“Puan” yüzde puan farkını gösterir (örn. %3,97 → %0,31 = −3,66 puan). Hacim farkı ise yüzde değişimdir.</p>
     <div class="grid movers" style="margin-top:16px">
@@ -186,9 +201,10 @@
       <div><strong class="small">Hacmi en çok azalanlar</strong><div class="tw" style="max-height:none;margin-top:6px"><table id="cmpDn"></table></div></div>
     </div>
     <div id="flipBox" style="margin-top:16px" hidden><strong class="small">Yön değiştiren büyük hisseler</strong> <span class="muted small">(hacim ≥ 500 mn TL, iki günün işareti zıt)</span><div class="tw" style="max-height:none;margin-top:6px"><table id="cmpFlip"></table></div></div>
-  </details>
-
-  <section class="card" id="stocksCard" aria-labelledby="stH">
+  </section>
+      <section class="card" id="cmpEmpty" hidden><p class="muted" style="margin:0">Bu tarihten önce yüklenmiş rapor yok, karşılaştırma yapılamıyor.</p></section>
+    </div>
+    <div class="tpanel" data-t="hisseler" role="tabpanel" hidden><section class="card" id="stocksCard" aria-labelledby="stH">
     <h2 id="stH">Hisseler <span class="muted small" id="stCount"></span></h2>
     <div class="tools">
       <input id="q" type="search" placeholder="Hisse kodu veya şirket ara…" aria-label="Hisse ara" autocomplete="off">
@@ -202,9 +218,8 @@
     </div>
     <div class="tw"><table id="stTable"></table></div>
     <div class="row" style="margin-top:10px"><button id="more" hidden>Daha fazla göster</button><span class="muted small" id="stInfo"></span></div>
-  </section>
-
-  <section class="card" id="chatCard" hidden aria-labelledby="chatH">
+  </section></div>
+    <div class="tpanel" data-t="metin" role="tabpanel" hidden><section class="card" id="chatCard" hidden aria-labelledby="chatH">
     <h2 id="chatH">Bültene soru sor <span class="badge">AI</span></h2>
     <div class="row">
       <input id="chatQ" maxlength="300" placeholder="Örn: Bugün hacim dünden ne kadar değişti?" style="flex:1;min-width:220px" aria-label="Soru">
@@ -213,9 +228,7 @@
     <div class="row" id="chatEx" style="margin-top:10px"></div>
     <div id="chatA" style="margin-top:12px;white-space:pre-wrap" aria-live="polite"></div>
     <p class="muted small" style="margin:10px 0 0">Cevaplar yalnızca seçili günün bülten verisine dayanır; hata içerebilir, yatırım tavsiyesi değildir. Bültende endeks seviyesi yoktur, yalnızca sepet göstergeleri vardır.</p>
-  </section>
-
-  <section class="card" id="raporCard" aria-labelledby="rpH">
+  </section><section class="card" id="raporCard" aria-labelledby="rpH">
     <div class="ai-head">
       <h2 id="rpH">Günlük piyasa özeti</h2><span class="muted small" id="rpDate"></span>
       <details class="menu" id="exportMenu"><summary>Dışa aktar ▾</summary>
@@ -223,23 +236,26 @@
       </details>
     </div>
     <div id="rpBody" class="muted">Bir tarih seç.</div>
-  </section>
-
+  </section></div>
+  </div>
   </div><!-- /pgHome -->
 
   <div id="pgEndeks" class="pg" hidden>
-    <section class="card">
+    <div class="tabwrap" data-key="endeks">
+      <div class="tabs" role="tablist" aria-label="Endeks bölümleri"><button role="tab" data-t="grafik" aria-selected="true">Grafik</button><button role="tab" data-t="liste" aria-selected="false">Tüm endeksler</button></div>
+      <div class="tpanel" data-t="grafik" role="tabpanel"><section class="card">
       <h2>Resmî BIST endeksleri <span class="muted small" id="endTarih"></span></h2>
       <p class="muted small" id="endNot" style="margin-top:-6px"></p>
       <div class="row" style="margin-bottom:10px"><select id="endSec" aria-label="Grafik endeksi"></select><span class="muted small">Aylık kapanış (ay sonu değerleri, son 10 yıl)</span></div>
       <div id="endChart"></div><p class="muted small" id="endGunluk" style="margin:10px 0 0"></p>
-    </section>
-    <section class="card">
+    </section></div>
+      <div class="tpanel" data-t="liste" role="tabpanel" hidden><section class="card">
       <h2>Tüm endeksler (TL) <span class="muted small" id="endSayi"></span></h2>
       <div class="tools"><input id="endQ" type="search" placeholder="Endeks kodu veya adı ara…" aria-label="Endeks ara" autocomplete="off"></div>
       <div class="tw"><table id="endTable"></table></div>
       <p class="muted small" style="margin:10px 0 0">Ay başı / yıl başı / 1 yıl getirileri, resmî ay sonu değerlerine göre hesaplanır (1 yıl: bir yıl öncesine en yakın ay sonu). “Gün %” için önceki bir günün kaydı gerekir; kayıt biriktikçe dolar.</p>
-    </section>
+    </section></div>
+    </div>
   </div>
 
   <div id="pgTarama" class="pg" hidden><div id="taramaBody" class="muted">Yükleniyor…</div></div>
@@ -349,7 +365,7 @@ function hbars(el, rows, valFn, labelFn, colorFn, scaleMax) {
   const max = scaleMax || Math.max(...rows.map((r) => Math.abs(valFn(r))), 1e-9);
   $(el).innerHTML = rows.map((r) => {
     const v = valFn(r);
-    return `<div class="hb" title="${esc(r.ad)}"><a class="k" href="#/hisse/${encodeURIComponent(r.kod)}">${esc(r.kod)}</a><div class="track"><div class="fill" style="width:${Math.max(2, Math.abs(v) / max * 100)}%;background:${colorFn(r)}"></div></div><span class="n">${labelFn(r)}</span></div>`;
+    return `<div class="hb" title="${esc(r.ad)}"><a class="k" href="#/hisse/${encodeURIComponent(r.kod)}">${ikon(r.kod, "s")}${esc(r.kod)}</a><div class="track"><div class="fill" style="width:${Math.max(2, Math.abs(v) / max * 100)}%;background:${colorFn(r)}"></div></div><span class="n">${labelFn(r)}</span></div>`;
   }).join('');
 }
 function renderCharts() {
@@ -370,8 +386,8 @@ function renderCharts() {
 /* ---------- karşılaştırma ---------- */
 function renderCompare() {
   const box = $('cmpCard');
-  if (!data.pm) { box.hidden = true; return; }
-  box.hidden = false; box.open = window.innerWidth > 720;
+  if (!data.pm) { box.hidden = true; $('cmpEmpty').hidden = false; return; }
+  box.hidden = false; $('cmpEmpty').hidden = true;
   $('cmpDates').textContent = `· ${trDate(data.prev_date)} → ${trDate(data.date)}`;
   const m = data.m, p = data.pm;
   const rows = [  // [etiket, onceki, bugun, bicim, yuksekIyiMi, puanMi]
@@ -414,7 +430,7 @@ function filtered() {
 function renderStocks() {
   const all = filtered(), rows = all.slice(0, st.shown);
   $('stTable').innerHTML = '<thead><tr>' + COLS.map(([k, l, r, opt]) => `<th class="s ${r ? 'r' : ''} ${opt ? 'opt' : ''} ${st.key === k ? 'on' : ''}" data-k="${k}" aria-sort="${st.key === k ? (st.dir < 0 ? 'descending' : 'ascending') : 'none'}">${l}${st.key === k ? (st.dir < 0 ? ' ▼' : ' ▲') : ''}</th>`).join('') + '<th class="opt">Sepet</th></tr></thead><tbody>' +
-    rows.map((s) => `<tr class="click" data-kod="${esc(s.kod)}"><td><b>${esc(s.kod)}</b></td><td class="opt">${esc(s.ad)}</td><td class="r">${nf(s.kap, 2)}</td><td class="r ${cls(s.deg)}">${arrow(s.deg)} ${pct(s.deg)}</td><td class="r opt">${nf(s.hac, 1)}</td>
+    rows.map((s) => `<tr class="click" data-kod="${esc(s.kod)}"><td><span class="kodh">${ikon(s.kod)}<b>${esc(s.kod)}</b></span></td><td class="opt">${esc(s.ad)}</td><td class="r">${nf(s.kap, 2)}</td><td class="r ${cls(s.deg)}">${arrow(s.deg)} ${pct(s.deg)}</td><td class="r opt">${nf(s.hac, 1)}</td>
       <td class="r opt ${s.hfark == null ? 'neu' : cls(s.hfark)}">${s.hfark == null ? '–' : arrow(s.hfark) + ' %' + nf(Math.abs(s.hfark))}</td><td class="r opt">%${nf(s.aralik, 1)}</td><td class="r opt">%${nf(s.acg, 1)}</td>
       <td class="opt">${s.b30 ? '<span class="tag">BIST 30</span>' : ''}${s.b100 ? '<span class="tag">BIST 100</span>' : ''}</td></tr>`).join('') + '</tbody>';
   $('stCount').textContent = `· ${nf(all.length)} / ${nf(data.stocks.length)}`;
@@ -489,6 +505,39 @@ async function ask(q) {
 }
 
 
+
+/* ---------- sekmeler ---------- */
+const tabState = {};
+function tabSecim(wrap, id) {
+  const bt = [...wrap.querySelectorAll(':scope > .tabs > button')];
+  if (!bt.some((b) => b.dataset.t === id)) id = bt[0] && bt[0].dataset.t;
+  bt.forEach((b) => b.setAttribute('aria-selected', String(b.dataset.t === id)));
+  wrap.querySelectorAll(':scope > .tpanel').forEach((p) => { p.hidden = p.dataset.t !== id; });
+}
+function tabHtml(key, tabs, aria) {   // tabs: [[id, etiket, html], ...]; onceki secim hatirlanir
+  const sec = tabs.some((t) => t[0] === tabState[key]) ? tabState[key] : tabs[0][0];
+  return `<div class="tabwrap" data-key="${key}"><div class="tabs" role="tablist" aria-label="${esc(aria || '')}">${tabs.map(([id, l]) => `<button role="tab" data-t="${id}" aria-selected="${id === sec}">${esc(l)}</button>`).join('')}</div>` +
+    tabs.map(([id, , h]) => `<div class="tpanel" data-t="${id}" role="tabpanel" ${id === sec ? '' : 'hidden'}>${h}</div>`).join('') + '</div>';
+}
+document.addEventListener('click', (e) => {
+  const b = e.target.closest('.tabs > button[data-t]'); if (!b) return;
+  const w = b.closest('.tabwrap'); tabState[w.dataset.key] = b.dataset.t; tabSecim(w, b.dataset.t);
+});
+document.addEventListener('keydown', (e) => {   // ok tuslariyla sekme gecisi
+  const b = e.target.closest && e.target.closest('.tabs > button[data-t]'); if (!b || !['ArrowLeft', 'ArrowRight'].includes(e.key)) return;
+  const bt = [...b.parentElement.children], i = bt.indexOf(b) + (e.key === 'ArrowRight' ? 1 : -1), n = bt[(i + bt.length) % bt.length];
+  n.focus(); n.click();
+});
+
+/* ---------- şirket ikonları ---------- */
+let IKONLAR = new Set();
+async function ikonYukle() { try { IKONLAR = new Set(await staticGet('data/ikonlar.json')); } catch { IKONLAR = new Set(); } }
+function ikon(kod, boy = '') {   // yerel ikon varsa resim, yoksa renkli harf rozeti
+  if (IKONLAR.has(kod)) return `<img class="ico ${boy}" src="ikon/${encodeURIComponent(kod)}.png" alt="" width="24" height="24" loading="lazy" decoding="async">`;
+  let h = 0; for (const c of kod) h = (h * 31 + c.charCodeAt(0)) % 360;
+  return `<span class="ico av ${boy}" style="background:hsl(${h} 42% 38%)" aria-hidden="true">${esc(kod.slice(0, 2))}</span>`;
+}
+
 /* ---------- grafikler (satır içi SVG) ---------- */
 const fmtD = (iso, yil) => iso.slice(8, 10) + '.' + iso.slice(5, 7) + (yil ? '.' + iso.slice(2, 4) : '');
 function cizgi(el, pts, opt = {}) {
@@ -521,7 +570,7 @@ function sutun(el, vals, labels, colors) {
 }
 
 /* ---------- sayfalar ---------- */
-const kodLink = (k) => `<a class="k" href="#/hisse/${encodeURIComponent(k)}"><b>${esc(k)}</b></a>`;
+const kodLink = (k) => `<a class="k kodh" href="#/hisse/${encodeURIComponent(k)}">${ikon(k, "s")}<b>${esc(k)}</b></a>`;
 const sayfaVeri = {};
 async function veri(url, el) {
   if (sayfaVeri[url]) return sayfaVeri[url];
@@ -560,12 +609,15 @@ $('endTable').onclick = (e) => { const th = e.target.closest('th.s'); if (!th) r
 const TL = { deg: ['Değişim', (v) => `<span class="${cls(v)}">${pct(v)}</span>`], hac_mn: ['Hacim (mn TL)', (v) => nf(v, 1)], hac_ort20_mn: ['20 gün ort. hacim', (v) => nf(v, 1)], hac_oran: ['Hacim / ort.', (v) => nf(v, 1) + '×'],
   tavan_seri: ['Seri (gün)', (v) => nf(v)], taban_seri: ['Seri (gün)', (v) => nf(v)], kap: ['Kapanış', (v) => nf(v, 2)], acg_pay: ['Açığa satış payı', (v) => '%' + nf(v, 1)], acg_mn: ['Açığa satış (mn TL)', (v) => nf(v, 1)],
   g5: ['5 gün', (v) => `<span class="${cls(v)}">${pct(v)}</span>`], g20: ['20 gün', (v) => `<span class="${cls(v)}">${pct(v)}</span>`] };
+const TGRUP = [['kilit', 'Hacim ve kilitler', ['hacim_patlama', 'tavan_kilitli', 'taban_kilitli']], ['seri', 'Seriler, zirve ve dip', ['ardisik_tavan', 'ardisik_taban', 'zirve', 'dip']], ['getiri', 'Getiri ve açığa satış', ['acigasatis', 'g5_yukselen', 'g5_dusen', 'g20_yukselen']]];
 async function sayfaTarama() {
   const box = $('taramaBody'); const t = await veri('data/tarama.json', box); if (!t) return;
   box.className = '';
+  const kart = (l) => `<section class="card" style="margin:0"><h2>${esc(l.baslik)} <span class="muted small">· ${l.satirlar.length}</span></h2><p class="muted small" style="margin-top:-6px">${esc(l.aciklama)}</p>` +
+    (l.satirlar.length ? `<div class="tw" style="max-height:420px"><table><thead><tr><th>Hisse</th>${l.sutunlar.map((c) => `<th class="r">${TL[c][0]}</th>`).join('')}</tr></thead><tbody>${l.satirlar.map((x) => `<tr><td>${kodLink(x.kod)}</td>${l.sutunlar.map((c) => `<td class="r">${x[c] == null ? '–' : TL[c][1](x[c])}</td>`).join('')}</tr>`).join('')}</tbody></table></div>` : '<p class="muted">Bu kriteri sağlayan hisse yok.</p>') + '</section>';
+  const L = Object.fromEntries(t.listeler.map((l) => [l.id, l]));
   box.innerHTML = `<p class="muted small" style="margin:0 0 14px">Tarama tarihi: <b>${trDate(t.tarih)}</b> · ${nf(t.hisse_sayisi)} hisse. Tüm listeler, bülten arşivinden kurallarla hesaplanır (yapay zekâ yok); getiriler bölünme/bedelsize göre düzeltilmiş günlük değişimlerin bileşiğidir.</p>` +
-    '<div class="gridp">' + t.listeler.map((l) => `<section class="card" style="margin:0"><h2>${esc(l.baslik)} <span class="muted small">· ${l.satirlar.length}</span></h2><p class="muted small" style="margin-top:-6px">${esc(l.aciklama)}</p>` +
-      (l.satirlar.length ? `<div class="tw" style="max-height:420px"><table><thead><tr><th>Hisse</th>${l.sutunlar.map((c) => `<th class="r">${TL[c][0]}</th>`).join('')}</tr></thead><tbody>${l.satirlar.map((x) => `<tr><td>${kodLink(x.kod)}</td>${l.sutunlar.map((c) => `<td class="r">${x[c] == null ? '–' : TL[c][1](x[c])}</td>`).join('')}</tr>`).join('')}</tbody></table></div>` : '<p class="muted">Bu kriteri sağlayan hisse yok.</p>') + '</section>').join('') + '</div>';
+    tabHtml('tarama', TGRUP.map(([id, ad, ids]) => [id, ad, `<div class="gridp">${ids.filter((i) => L[i]).map((i) => kart(L[i])).join('')}</div>`]), 'Tarama grupları');
 }
 
 /* takvim ve halka arz */
@@ -578,9 +630,10 @@ async function sayfaTakvim() {
   const ha = `<div class="tw" style="max-height:480px"><table><thead><tr><th>Hisse</th><th class="opt">Şirket</th><th>İlk işlem günü</th><th class="r">İlk gün kapanış</th><th class="r">Güncel</th><th class="r">Getiri</th></tr></thead><tbody>${t.halka_arz.map((x) =>
     `<tr><td>${kodLink(x.kod)}</td><td class="opt">${esc(x.ad || '')}</td><td>${gun(x.ilk_islem)}</td><td class="r">${nf(x.ilk_kapanis, 2)}</td><td class="r">${x.guncel == null ? '–' : nf(x.guncel, 2)}</td><td class="r ${cls(x.getiri)}">${x.getiri == null ? '–' : pct(x.getiri, 1)}</td></tr>`).join('')}</tbody></table></div>`;
   const kd = t.kod_degisiklikleri.length ? `<div class="tw" style="max-height:360px"><table><thead><tr><th>Eski kod</th><th>Yeni kod</th><th class="opt">Şirket</th></tr></thead><tbody>${t.kod_degisiklikleri.map((x) => `<tr><td>${esc(x.eski)}</td><td>${kodLink(x.yeni)}</td><td class="opt">${esc(x.ad || '')}</td></tr>`).join('')}</tbody></table></div>` : '<p class="muted">Kod değişikliği kaydı yok.</p>';
-  box.innerHTML = `<section class="card"><h2>Yaklaşan genel kurullar <span class="muted small">· ${trDate(t.tarih)} sonrası, KAP genel kurul raporu</span></h2>${gk}</section>
-    <section class="card"><h2>Son halka arzlar ve ilk gün performansı</h2>${ha}<p class="muted small" style="margin:10px 0 0">Getiri = güncel kapanış / ilk gün kapanışı − 1; bölünme ve temettüler için düzeltilmemiştir.</p></section>
-    <section class="card"><h2>Pay kodu değişiklikleri</h2>${kd}</section>`;
+  box.innerHTML = tabHtml('takvim', [
+    ['gk', 'Genel kurullar', `<section class="card"><h2>Yaklaşan genel kurullar <span class="muted small">· ${trDate(t.tarih)} sonrası, KAP genel kurul raporu</span></h2>${gk}</section>`],
+    ['ha', 'Halka arzlar', `<section class="card"><h2>Son halka arzlar ve ilk gün performansı</h2>${ha}<p class="muted small" style="margin:10px 0 0">Getiri = güncel kapanış / ilk gün kapanışı − 1; bölünme ve temettüler için düzeltilmemiştir.</p></section>`],
+    ['kd', 'Kod değişiklikleri', `<section class="card"><h2>Pay kodu değişiklikleri</h2>${kd}</section>`]], 'Takvim bölümleri');
 }
 
 /* aracı kurumlar */
@@ -616,19 +669,21 @@ function renderHisse(x) {
   if (lim) dl.push(['Alt / üst fiyat limiti', `${nf(lim.alt, 2)} / ${nf(lim.ust, 2)}${lim.limit_pct != null ? ` (±%${nf(lim.limit_pct, 1)})` : ''}`], ['Referans fiyat', nf(lim.ref, 2)], ['Açığa satışa açık', lim.acik ? 'Evet' : 'Hayır']);
   dl.push(['Son 20 günde tavana / tabana yakın', `${x.tavan20} / ${x.taban20} gün`], ['Ardışık tavan / taban serisi', `${x.tavan_seri} / ${x.taban_seri} gün`]);
   const son20 = sr.d.map((d, i) => ({ d, c: sr.c[i], g: sr.g[i], v: sr.v[i] })).slice(-20).reverse();
-  box.innerHTML = `<a class="back" href="#/">← Gün sonu</a>
-    <div class="hh"><h1>${esc(x.kod)}</h1><span class="ad">${esc(x.ad)}</span></div><div class="row" style="margin-bottom:16px">${bayrak}</div>
-    <section class="kpis">${kp}</section>
-    <section class="card"><div class="row" style="justify-content:space-between;margin-bottom:6px"><h2 style="margin:0">Fiyat</h2><div class="rng" id="hsRng">${[['1A', 21], ['3A', 63], ['6A', 126], ['Tümü', 9999]].map(([l, n]) => `<button data-n="${n}" class="${hs.n === n ? 'on' : ''}">${l}</button>`).join('')}</div></div>
+  const fiyatH = `<section class="card"><div class="row" style="justify-content:space-between;margin-bottom:6px"><h2 style="margin:0">Fiyat</h2><div class="rng" id="hsRng">${[['1A', 21], ['3A', 63], ['6A', 126], ['Tümü', 9999]].map(([l, n]) => `<button data-n="${n}" class="${hs.n === n ? 'on' : ''}">${l}</button>`).join('')}</div></div>
       <div id="hsChart"></div><div class="muted small" style="margin:10px 0 2px">Günlük hacim (mn TL) · yeşil/kırmızı: günlük değişim işareti</div><div id="hsVol"></div>
-      <p class="muted small" style="margin:10px 0 0">Fiyat serisi bölünme/bedelsiz için düzeltilmiştir (günlük değişimlerin bileşiği); temettü düzeltmesi yoktur. Son kapanışa sabitlenmiştir.</p></section>
-    <div class="gridp">
+      <p class="muted small" style="margin:10px 0 0">Fiyat serisi bölünme/bedelsiz için düzeltilmiştir (günlük değişimlerin bileşiği); temettü düzeltmesi yoktur. Son kapanışa sabitlenmiştir.</p></section>`;
+  const limH = `<div class="gridp">
       <section class="card" style="margin:0"><h2>Limit ve işlem bilgileri</h2><dl class="kv">${dl.map(([k, v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`).join('')}</dl></section>
       <section class="card" style="margin:0"><h2>Genel kurul ve halka arz</h2><dl class="kv">
         ${gk ? `<div><dt>${gk.tarih >= x.seri.d[x.seri.d.length - 1] ? 'Sonraki genel kurul' : 'Son genel kurul'}</dt><dd>${trDate(gk.tarih)}${gk.saat ? ' ' + esc(gk.saat) : ''}<br><span class="muted small" style="font-weight:400">${esc(gk.tur || '')}${gk.iptal ? ' · İPTAL' : ''}</span></dd></div><div><dt>Gündem</dt><dd>${[...(gk.gundem || []), gk.birlesme && 'Birleşme', gk.bolunme && 'Bölünme'].filter(Boolean).join(', ') || '–'}</dd></div>` : '<div><dt>Genel kurul</dt><dd>Kayıt yok</dd></div>'}
         ${ha ? `<div><dt>İlk işlem günü</dt><dd>${gun(ha.ilk_islem)}</dd></div><div><dt>İlk gün kapanışı → güncel</dt><dd>${nf(ha.ilk_kapanis, 2)} → ${nf(ha.guncel, 2)} ${ha.getiri == null ? '' : `<span class="${cls(ha.getiri)}">(${pct(ha.getiri, 1)})</span>`}</dd></div>` : ''}</dl></section>
-    </div>
-    <section class="card" style="margin-top:14px"><h2>Son 20 işlem günü</h2><div class="tw"><table><thead><tr><th>Tarih</th><th class="r">Kapanış*</th><th class="r">Değişim</th><th class="r">Hacim (mn TL)</th></tr></thead><tbody>${son20.map((y) => `<tr><td>${trDate(y.d)}</td><td class="r">${nf(y.c, 2)}</td><td class="r ${cls(y.g)}">${arrow(y.g)} ${pct(y.g)}</td><td class="r">${nf(y.v, 1)}</td></tr>`).join('')}</tbody></table></div><p class="muted small" style="margin:8px 0 0">*Düzeltilmiş kapanış.</p></section>`;
+    </div>`;
+  const gecH = `<section class="card"><h2>Son 20 işlem günü</h2><div class="tw"><table><thead><tr><th>Tarih</th><th class="r">Kapanış*</th><th class="r">Değişim</th><th class="r">Hacim (mn TL)</th></tr></thead><tbody>${son20.map((y) => `<tr><td>${trDate(y.d)}</td><td class="r">${nf(y.c, 2)}</td><td class="r ${cls(y.g)}">${arrow(y.g)} ${pct(y.g)}</td><td class="r">${nf(y.v, 1)}</td></tr>`).join('')}</tbody></table></div><p class="muted small" style="margin:8px 0 0">*Düzeltilmiş kapanış.</p></section>`;
+  box.innerHTML = `<a class="back" href="#/">← Gün sonu</a>
+    <div class="hh">${ikon(x.kod, 'l')}<h1>${esc(x.kod)}</h1><span class="ad">${esc(x.ad)}</span></div>
+    <div class="row" style="margin:0 0 8px"><span style="font-size:24px;font-weight:650">${nf(x.kap, 2)}</span><span class="${cls(x.deg)}" style="font-weight:600">${arrow(x.deg)} ${pct(x.deg)}</span></div>
+    <div class="row" style="margin-bottom:18px">${bayrak}</div>` +
+    tabHtml('hisse', [['fiyat', 'Fiyat', fiyatH], ['gosterge', 'Göstergeler', `<section class="kpis">${kp}</section>`], ['limit', 'Limit ve takvim', limH], ['gecmis', 'Son günler', gecH]], 'Hisse bölümleri');
   const ciz = () => {
     const n = Math.min(hs.n, sr.d.length), a = sr.d.length - n, pts = sr.d.slice(a).map((d, i) => [d, sr.c[a + i]]);
     cizgi($('hsChart'), pts, { fmt: (v) => nf(v, 2), lab: (d, tam) => tam ? trDate(d) : fmtD(d, n > 126), aria: x.kod + ' fiyat grafiği' });
@@ -674,9 +729,8 @@ $('print').onclick = () => { closeMenu(); window.print(); };
 document.addEventListener('click', (e) => { if (!e.target.closest('#exportMenu')) closeMenu(); });
 
 if (STATIC) { document.querySelectorAll('.live').forEach((x) => x.hidden = true); } else checkStatus();
-loadDates();
+ikonYukle().then(() => { loadDates(); route(); });
 initChat();
-route();
 </script>
 </body>
 </html>
