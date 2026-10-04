@@ -255,9 +255,9 @@
   .brand { display:flex; align-items:center; gap:10px; color:var(--text); text-decoration:none; padding:2px 8px 16px; }
   .brand .lm { flex:0 0 auto; filter:drop-shadow(0 2px 6px rgba(39,72,201,.35)); }
   .brand .bn { font-weight:800; font-size:15px; line-height:1.05; letter-spacing:.02em; } .brand .bn span { font-weight:600; font-size:12px; color:var(--accent); letter-spacing:0; }
-  .brand .tw { transform-box:fill-box; transform-origin:bottom; animation:barUp .8s cubic-bezier(.2,.8,.2,1) backwards; }
-  .brand .t2 { animation-delay:.1s; } .brand .t3 { animation-delay:.18s; } .brand .t4 { animation-delay:.26s; } .brand .t5 { animation-delay:.32s; } .brand .t6 { animation-delay:.4s; }
-  .brand .mh, .brand .hh { transform-origin:24px 20px; } .brand .mh { animation:sweep 1.4s cubic-bezier(.3,.7,.2,1) .5s backwards; } .brand .hh { animation:sweep 1.4s cubic-bezier(.3,.7,.2,1) .5s backwards; }
+  .lm .tw { transform-box:fill-box; transform-origin:bottom; animation:barUp .8s cubic-bezier(.2,.8,.2,1) backwards; }
+  .lm .t2 { animation-delay:.1s; } .lm .t3 { animation-delay:.18s; } .lm .t4 { animation-delay:.26s; } .lm .t5 { animation-delay:.32s; } .lm .t6 { animation-delay:.4s; }
+  .lm .mh, .lm .hh { transform-origin:24px 20px; } .brand .mh { animation:sweep 1.4s cubic-bezier(.3,.7,.2,1) .5s backwards; } .brand .hh { animation:sweep 1.4s cubic-bezier(.3,.7,.2,1) .5s backwards; }
   .brand:hover .mh { animation:sweep 1.1s cubic-bezier(.3,.7,.2,1); } .brand:hover .hh { animation:sweep 1.1s cubic-bezier(.3,.7,.2,1) reverse; }
   @keyframes sweep { from { transform:rotate(-300deg); } }
   @keyframes barUp { from { transform:scaleY(.05); } }
@@ -284,6 +284,18 @@
   .side .nav a { transition:background-color .2s ease, color .2s ease; } tbody tr.click td { transition:background-color .15s ease; }
   .tabs button { transition:color .2s ease, border-color .2s ease; } .star:active, button:active:not(:disabled) { transform:scale(.97); }
   .star.on { animation:pgIn .25s ease; }
+  /* sayfa geçişi yükleme animasyonu */
+  .yukle { position:fixed; inset:0; z-index:100; display:grid; place-items:center; background:color-mix(in srgb, var(--bg) 72%, transparent); backdrop-filter:blur(3px); -webkit-backdrop-filter:blur(3px); opacity:0; transition:opacity .2s ease; pointer-events:none; }
+  .yukle.on { opacity:1; }
+  .yb { display:flex; flex-direction:column; align-items:center; gap:12px; color:var(--muted); font-size:13px; font-weight:600; letter-spacing:.02em; }
+  .yb .lm { filter:drop-shadow(0 6px 18px rgba(39,72,201,.45)); }
+  .yukle .lm .tw { transform-box:fill-box; transform-origin:bottom; animation:kuleDongu 1.5s cubic-bezier(.3,.7,.2,1) infinite; }
+  .yukle .lm .t2 { animation-delay:.08s; } .yukle .lm .t3 { animation-delay:.16s; } .yukle .lm .t4 { animation-delay:.24s; } .yukle .lm .t5 { animation-delay:.3s; } .yukle .lm .t6 { animation-delay:.36s; }
+  .yukle .lm .mh { animation:sweep 1.5s cubic-bezier(.3,.7,.2,1) infinite; } .yukle .lm .hh { animation:sweepR 1.5s cubic-bezier(.3,.7,.2,1) infinite; }
+  .yb span { animation:nabiz 1.5s ease-in-out infinite; }
+  @keyframes kuleDongu { 0% { transform:scaleY(.04); opacity:.2; } 45%, 82% { transform:scaleY(1); opacity:1; } 100% { transform:scaleY(1); opacity:.15; } }
+  @keyframes sweepR { from { transform:rotate(300deg); } }
+  @keyframes nabiz { 50% { opacity:.45; } }
   @media (max-width:900px) { .side .brand, .sidefoot { display:none; } }
   @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation:none !important; transition:none !important; scroll-behavior:auto !important; } }
   @media print { body * { visibility:hidden; } #raporCard, #raporCard * { visibility:visible; } #raporCard { position:absolute; left:0; top:0; width:100%; border:0; } .menu { display:none; } }
@@ -409,6 +421,8 @@
   <footer>Kaynak: Borsa İstanbul günlük bülteni. “BIST 30 / BIST 100 sepeti” göstergeleri, sepetteki hisselerin hacim ağırlıklı ortalama değişimidir; resmî endeks getirisi değildir. Bu sayfa yatırım tavsiyesi içermez.</footer>
 </main>
 </div></div>
+
+<div class="yukle" id="yukle" hidden role="status" aria-live="polite"><div class="yb"><svg class="lm" viewBox="0 0 48 48" width="84" height="84" aria-hidden="true"><defs><linearGradient id="lg2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5b8cff"/><stop offset="1" stop-color="#2748c9"/></linearGradient></defs><rect width="48" height="48" rx="12" fill="url(#lg2)"/><path class="tw t1" fill="#fff" fill-rule="evenodd" d="M9 41h30v-3H37V29H11v9H9ZM15 38v-4a2 2 0 0 1 4 0v4Z M22 38v-4a2 2 0 0 1 4 0v4Z M29 38v-4a2 2 0 0 1 4 0v4Z"/><rect class="tw t2" x="14.5" y="26" width="19" height="3" rx="1" fill="#fff" opacity=".92"/><path class="tw t3" fill="#fff" fill-rule="evenodd" d="M18 26V14h12v12ZM24 15.8a4.2 4.2 0 1 0 0 8.4 4.2 4.2 0 1 0 0-8.4Z"/><path class="tw t4" fill="#fff" d="M16.5 14.5 19 10h10l2.5 4.5Z"/><path class="tw t5" fill="#fff" d="M19.5 10a4.5 4.5 0 0 1 9 0Z"/><rect class="tw t6" x="23.4" y="2.6" width="1.2" height="3" fill="#fff"/><circle class="tw t6" cx="24" cy="2.4" r="1.1" fill="#fff"/><g class="hands" stroke="#fff" stroke-linecap="round"><line class="mh" x1="24" y1="20" x2="24" y2="16.7" stroke-width="1.15" transform="rotate(-55 24 20)"/><line class="hh" x1="24" y1="20" x2="24" y2="22.4" stroke-width="1.5" transform="rotate(12 24 20)"/></g><circle cx="24" cy="20" r=".9" fill="#fff"/></svg><span>Yükleniyor…</span></div></div>
 
 <dialog id="dlg"><div id="dlgBody"></div><div style="text-align:right;margin-top:14px"><button id="dlgClose">Kapat</button></div></dialog>
 
@@ -616,7 +630,7 @@ async function loadDates() {
   const list = await (await api('/api/dates')).json(), sel = $('date');
   sel.innerHTML = list.length ? '' : '<option>Rapor bulunamadı</option>';
   for (const d of list) { const o = document.createElement('option'); o.value = d.date; o.textContent = trDate(d.date); sel.appendChild(o); }
-  if (list.length) selectDate(list[0].date);
+  if (list.length) await selectDate(list[0].date);
 }
 async function selectDate(date) {
   cur = date; st.shown = 80; $('chatA').textContent = '';
@@ -900,6 +914,14 @@ const SAYFALAR = { home: 'pgHome', endeksler: 'pgEndeks', izleme: 'pgIzleme', ka
 const SAYFA_AD = { home: 'Gün sonu', endeksler: 'Endeksler', izleme: 'İzleme Listem', karsilastir: 'Karşılaştır', tarama: 'Taramalar', takvim: 'Takvim ve Halka Arz', araci: 'Aracı Kurumlar' };
 const SAYFA_BASLIK = { home: 'Gün Sonu', endeksler: 'Endeksler', izleme: 'İzleme Listem', karsilastir: 'Hisse Karşılaştırma', tarama: 'Taramalar', takvim: 'Takvim ve Halka Arz', araci: 'Aracı Kurumlar' };
 const GERI = { href: '#/', ad: 'Gün sonu', gecmis: false };
+let anaHazir = Promise.resolve(), yukleNo = 0;
+function yukleGoster(is) {   // sayfa geçişinde ortada kule animasyonu; iş bitince ve en az 550 ms sonra kapanır
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const el = $('yukle'), no = ++yukleNo, t0 = Date.now(); el.hidden = false; void el.offsetWidth; el.classList.add('on');
+  Promise.resolve(is).catch(() => {}).then(() => new Promise((r) => setTimeout(r, Math.max(0, 550 - (Date.now() - t0))))).then(() => {
+    if (no !== yukleNo) return; el.classList.remove('on'); setTimeout(() => { if (no === yukleNo) el.hidden = true; }, 220);
+  });
+}
 const kaydirma = {}; let idxSon = 0, hashSon = null, pgSon = null;
 function route() {
   const parts = location.hash.replace(/^#\/?/, '').split('/');
@@ -922,8 +944,11 @@ function route() {
   window.scrollTo(0, hedef);
   if (hedef) [150, 450, 900].forEach((ms) => setTimeout(() => { if (location.hash === (hashSon || '') && Math.abs(window.scrollY - hedef) > 4) window.scrollTo(0, hedef); }, ms));
   hashSon = location.hash; pgSon = pg;
-  if (pg === 'endeksler') sayfaEndeks(); else if (pg === 'izleme') sayfaIzleme(); else if (pg === 'karsilastir') sayfaKarsilastir(decodeURIComponent(parts[1] || '').toUpperCase().split(',').filter(Boolean)); else if (pg === 'tarama') sayfaTarama(); else if (pg === 'takvim') sayfaTakvim(); else if (pg === 'araci') sayfaAraci();
-  else if (pg === 'hisse') sayfaHisse(decodeURIComponent(parts[1] || '').toUpperCase());
+  let is = anaHazir;
+  if (pg === 'endeksler') is = sayfaEndeks(); else if (pg === 'izleme') is = sayfaIzleme(); else if (pg === 'karsilastir') is = sayfaKarsilastir(decodeURIComponent(parts[1] || '').toUpperCase().split(',').filter(Boolean)); else if (pg === 'tarama') is = sayfaTarama(); else if (pg === 'takvim') is = sayfaTakvim(); else if (pg === 'araci') is = sayfaAraci();
+  else if (pg === 'hisse') is = sayfaHisse(decodeURIComponent(parts[1] || '').toUpperCase());
+  yukleGoster(is);
+
 }
 window.addEventListener('hashchange', route);
 
@@ -1073,7 +1098,7 @@ document.addEventListener('click', (e) => { if (!e.target.closest('.gs')) gsKapa
 document.addEventListener('keydown', (e) => { if (e.key === '/' && !/^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement.tagName)) { e.preventDefault(); $('gs').focus(); } });
 
 if (STATIC) { document.querySelectorAll('.live').forEach((x) => x.hidden = true); } else checkStatus();
-ikonYukle().then(() => { loadDates(); route(); });
+ikonYukle().then(() => { anaHazir = loadDates(); route(); });
 initChat();
 </script>
 </body>
