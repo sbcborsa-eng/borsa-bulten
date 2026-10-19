@@ -7,7 +7,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 48 48%22%3E%3Cdefs%3E%3ClinearGradient id=%22g%22 x1=%220%22 y1=%220%22 x2=%221%22 y2=%221%22%3E%3Cstop offset=%220%22 stop-color=%22%235b8cff%22/%3E%3Cstop offset=%221%22 stop-color=%22%232748c9%22/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width=%2248%22 height=%2248%22 rx=%2212%22 fill=%22url%28%23g%29%22/%3E%3Cpath fill=%22%23fff%22 fill-rule=%22evenodd%22 d=%22M9 41h30v-3H37V29H11v9H9ZM15 38v-4a2 2 0 0 1 4 0v4Z M22 38v-4a2 2 0 0 1 4 0v4Z M29 38v-4a2 2 0 0 1 4 0v4Z%22/%3E%3Crect x=%2214.5%22 y=%2226%22 width=%2219%22 height=%223%22 rx=%221%22 fill=%22%23fff%22 opacity=%22.92%22/%3E%3Cpath fill=%22%23fff%22 fill-rule=%22evenodd%22 d=%22M18 26V14h12v12ZM24 15.8a4.2 4.2 0 1 0 0 8.4 4.2 4.2 0 1 0 0-8.4Z%22/%3E%3Cpath fill=%22%23fff%22 d=%22M16.5 14.5 19 10h10l2.5 4.5Z%22/%3E%3Cpath fill=%22%23fff%22 d=%22M19.5 10a4.5 4.5 0 0 1 9 0Z%22/%3E%3Crect x=%2223.4%22 y=%222.6%22 width=%221.2%22 height=%223%22 fill=%22%23fff%22/%3E%3Ccircle cx=%2224%22 cy=%222.4%22 r=%221.1%22 fill=%22%23fff%22/%3E%3Cg stroke=%22%23fff%22 stroke-linecap=%22round%22%3E%3Cline x1=%2224%22 y1=%2220%22 x2=%2224%22 y2=%2216.7%22 stroke-width=%221.15%22 transform=%22rotate%28-55 24 20%29%22/%3E%3Cline x1=%2224%22 y1=%2220%22 x2=%2224%22 y2=%2222.4%22 stroke-width=%221.5%22 transform=%22rotate%2812 24 20%29%22/%3E%3C/g%3E%3Ccircle cx=%2224%22 cy=%2220%22 r=%22.9%22 fill=%22%23fff%22/%3E%3C/svg%3E">
-<meta name="theme-color" content="#2748c9">
+<meta name="theme-color" content="#101410">
 <title>Borsa İstanbul Günlük Piyasa Paneli</title>
 <style>
   :root {
@@ -146,7 +146,7 @@
   .chart { width:100%; height:auto; display:block; touch-action:pan-y; }
   .chart .ln { fill:none; stroke:var(--accent); stroke-width:2; vector-effect:non-scaling-stroke; } .chart .ar { fill:var(--accent); opacity:.09; }
   .chart .gl { stroke:var(--line); stroke-width:1; } .chart .gt { fill:var(--muted); font-size:11px; }
-  .chart .cx { stroke:var(--muted); stroke-dasharray:3 3; } .chart .cc { fill:var(--accent); }
+  .chart [hidden] { display:none !important; } .chart .t3, .chart .t4 { fill:var(--text); font-size:11px; } .chart .cx { stroke:var(--muted); stroke-dasharray:3 3; } .chart .cc { fill:var(--accent); }
   .chart .tp rect { fill:var(--card2); stroke:var(--line); } .chart .t1 { fill:var(--muted); font-size:11px; } .chart .t2 { fill:var(--text); font-size:13px; font-weight:600; } .chart .br { opacity:.8; }
   .kv { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:12px 22px; margin:0; } .kv div { min-width:0; } .kv dt { font-size:12.5px; color:var(--muted); } .kv dd { margin:2px 0 0; font-weight:600; }
   .pbar { display:inline-block; vertical-align:middle; height:8px; border-radius:4px; background:var(--accent); min-width:2px; }
@@ -414,12 +414,23 @@
   .movers { grid-template-columns:repeat(auto-fit,minmax(320px,1fr)); }
   @media (max-width:1100px) { .idxrow { grid-template-columns:minmax(0,1fr); } }
   @media print { body * { visibility:hidden; } #raporCard, #raporCard * { visibility:visible; } #raporCard { position:absolute; left:0; top:0; width:100%; border:0; } .menu { display:none; } }
+/* SBC — quiet, chart-first market workspace */
+:root,:root[data-theme="light"] { --bg:#f7f8f5;--card:#fff;--card2:#f1f3ed;--text:#182019;--muted:#697269;--line:#e3e7df;--accent:#287d37;--accent-bg:#e7f2e4;--up:#168448;--dn:#d34d42;--r:20px;--shadow:none; }
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#101410;--card:#171d17;--card2:#202820;--text:#f0f3eb;--muted:#a1ac9e;--line:#2b352a;--accent:#b5e962;--accent-bg:#29371f;--up:#9edb62;--dn:#fa8877;--shadow:none;}}
+:root[data-theme="dark"]{--bg:#101410;--card:#171d17;--card2:#202820;--text:#f0f3eb;--muted:#a1ac9e;--line:#2b352a;--accent:#b5e962;--accent-bg:#29371f;--up:#9edb62;--dn:#fa8877;--shadow:none;}
+html{scroll-behavior:smooth}body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:-.015em}button,a,input,select{transition:background .16s,color .16s,border-color .16s,box-shadow .16s}button:active{transform:translateY(1px)}button.primary{background:#c3f477;color:#18230f;border-color:#c3f477;font-weight:700}button,select,input{border-radius:12px}a:focus-visible,button:focus-visible{outline:3px solid var(--accent);outline-offset:4px}.side{width:224px;flex-basis:224px;background:var(--bg);padding:26px 15px;gap:12px}.side .nav{gap:6px}.side .nav a{padding:13px 15px;border-radius:14px;font-size:14px;color:var(--muted)}.side .nav a.on{background:var(--accent-bg);color:var(--text);font-weight:700}.side .nav a:hover{background:var(--card2)}.brand .lm{display:none}.brand:before{content:'S';display:grid;place-items:center;background:#c3f477;color:#20330f;width:40px;height:40px;border-radius:14px;font-size:26px;font-weight:800;transform:rotate(-7deg)}.brand .bn{font-size:17px;line-height:1.1}.brand .bn span{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}.searchbtn{background:var(--card);border-radius:13px;padding:13px;margin:6px 0 16px}.bar{height:80px;background:var(--bg);padding:0 36px;gap:12px}.bar .sp{display:flex;align-items:center;gap:8px;flex:1;font-size:12px;color:var(--muted)}.bar .sp:before{content:'';width:7px;height:7px;border-radius:50%;background:var(--accent)}.bar .sp:after{content:'GÜN SONU • SBC BORSA';font-size:10px;letter-spacing:.1em;font-weight:700}.bar select{font-size:12px;border:0;background:var(--card2);padding:10px 14px;border-radius:99px;min-width:0}.thm{border:0;background:var(--card2);border-radius:99px;white-space:nowrap}.account-btn{font-size:12px;white-space:nowrap;border-radius:99px;padding:9px 15px;background:var(--text);color:var(--bg);border:1px solid var(--text)}main{max-width:1460px;padding:30px 40px 70px}.pgt{font-size:30px;letter-spacing:-.045em;margin-bottom:26px}body[data-page="home"] #pgTitle{display:none}.card,.kpi{border-radius:20px;box-shadow:none}.card{padding:26px;border-color:var(--line)}.kpi .v{font-size:34px;letter-spacing:-.05em}.tabs{gap:10px;overflow-x:auto;scrollbar-width:none;flex-wrap:nowrap;margin-bottom:26px}.tabs button{white-space:nowrap;padding:13px 9px;font-size:13px;font-weight:600}.tabs button[aria-selected="true"]{color:var(--text);border-bottom-width:3px}.tabs .link{font-size:11px}.tw{border:0;border-radius:14px}th{border-bottom:1px solid var(--line);font-size:11px;text-transform:uppercase;letter-spacing:.035em;padding:14px 12px}td{padding:15px 12px}.cellk .nm b{font-size:14px}.cellk .nm span{font-size:11px;margin-top:5px}.ico{border-radius:50%}.seg{border:0;background:var(--card2);border-radius:99px;padding:3px}.seg button{border-radius:99px!important;font-size:12px;padding:7px 14px}.seg button+button{border-left:0}.seg button.on{background:var(--card);color:var(--text);box-shadow:0 1px 5px #0000000a}.hhead{align-items:flex-start;position:relative;padding:10px 0 20px;gap:14px 24px}.hhead .hh{width:100%;gap:12px}.hhead .hh h1{font-size:23px;letter-spacing:-.04em}.hprice .px{font-size:54px;font-weight:550;letter-spacing:-.065em;line-height:1.2}.hprice{align-items:center}.hact{margin-left:auto}.tags{margin-bottom:26px}.flag{border:0;background:var(--card2);padding:5px 11px;border-radius:99px}.hgrid{grid-template-columns:minmax(0,1fr) 285px;gap:28px}.hl>.card:first-child{padding:22px 12px;background:transparent;border:0}.hl>.card:first-child>.row{padding:0 8px}.rng{background:none;gap:5px;flex-wrap:wrap}.rng button{border:0;background:none;border-radius:99px;padding:8px 14px;font-size:12px}.rng button.on{color:var(--text);background:var(--accent-bg);border:0}.chart .ln{stroke-width:2.2}.chart .ar{opacity:.065}.chart .gl{stroke-dasharray:2 5;opacity:.6}.chart .tp{pointer-events:none}.chart .tp rect{fill:var(--card);stroke:var(--line)}#hsRet,#bdRet{font-size:11px;padding:8px}#hsChart svg,#bdChart svg{min-height:240px}.star{border-radius:99px;padding:10px 17px;font-size:12px}.star.on{background:var(--accent-bg);color:var(--text)}.hr .card{padding:23px}.kv dt{font-size:12px}.kv dd{font-size:13px}.discovery{margin-bottom:30px}.hero-layout{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:14px 0 28px}.eyebrow{font-size:10px;letter-spacing:.15em;color:var(--muted);font-weight:700;margin-bottom:12px}.hero-layout h1{font-size:clamp(32px,3.7vw,52px);font-weight:550;letter-spacing:-.065em;line-height:1.1;margin-bottom:15px;max-width:650px}.hero-layout h1 em{font-style:normal;color:var(--accent)}.hero-layout p{max-width:520px;color:var(--muted);font-size:14px;line-height:1.8}.hero-badge{width:140px;height:140px;flex:0 0 140px;border:1px solid var(--line);border-radius:50%;display:grid;place-content:center;text-align:center;background:radial-gradient(circle,var(--accent-bg),transparent 70%)}.hero-badge b{font-size:38px;font-weight:500;letter-spacing:-.06em}.hero-badge span{font-size:10px;letter-spacing:.04em;color:var(--muted)}.quickpaths{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 24px}.quickpaths button,.quickpaths a{padding:10px 16px;border-radius:99px;font-size:12px;text-decoration:none;color:var(--text);background:var(--card);border:1px solid var(--line)}.quickpaths button:hover,.quickpaths a:hover{background:var(--accent-bg);border-color:var(--accent)}.discover-strip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.discover-stock{padding:18px;background:var(--card);border:1px solid var(--line);border-radius:17px;text-decoration:none;color:var(--text);display:block;min-width:0}.discover-stock:hover{border-color:var(--accent);transform:translateY(-2px)}.discover-stock .row{justify-content:space-between;font-size:12px}.discover-stock strong{display:block;font-size:24px;font-weight:550;letter-spacing:-.04em;margin:12px 0 4px}.discover-stock small{font-size:10px;color:var(--muted)}.discover-stock svg{display:block;width:100%;height:30px;margin-top:10px}.discover-caption{display:flex;justify-content:space-between;align-items:center;margin:0 0 12px;font-size:12px}.auth-modal{width:min(480px,calc(100vw - 28px));max-height:90vh;border:1px solid var(--line);border-radius:26px;padding:32px;background:var(--card);color:var(--text);box-shadow:0 30px 100px #0004}.auth-modal::backdrop{background:#10191088;backdrop-filter:blur(8px)}.auth-modal h2{font-size:28px;letter-spacing:-.05em;margin:14px 0}.auth-modal p{font-size:13px;color:var(--muted);line-height:1.7}.auth-modal label{display:grid;gap:7px;font-size:12px;margin:15px 0}.auth-modal input{width:100%;padding:13px}.auth-modal .primary{width:100%;margin:12px 0}.auth-close{float:right;border:0;background:var(--card2);border-radius:50%;width:32px;height:32px;padding:0}.auth-feedback{font-size:12px;line-height:1.6;min-height:20px;color:var(--dn);overflow-wrap:anywhere}.admin-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.admin-stat{padding:15px;background:var(--card2);border-radius:13px;font-size:11px;color:var(--muted)}.admin-stat b{display:block;font-size:25px;color:var(--text);margin-top:5px}.toast-sbc{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:var(--text);color:var(--bg);padding:12px 22px;border-radius:99px;z-index:400;font-size:12px;max-width:90vw;box-shadow:0 8px 30px #0003}.pg:not([hidden]){animation:sbc-appear .28s ease-out}.discover-stock{transition:transform .2s,border-color .2s}@keyframes sbc-appear{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@media(min-width:1500px){main{padding:38px 70px 80px}.hprice .px{font-size:64px}}
+@media(max-width:1100px){main{padding:24px}.hgrid{grid-template-columns:1fr}.hr{display:grid;grid-template-columns:1fr 1fr;gap:16px}.side{width:190px;flex-basis:190px}.bar{padding:0 24px}.discover-strip{grid-template-columns:repeat(2,minmax(0,1fr))}.hero-badge{width:110px;height:110px;flex-basis:110px}}
+@media(max-width:860px){.side{width:100%;height:auto;flex-basis:auto;padding:0}.bar{height:66px;padding:0 16px;gap:8px}.bar .sp{display:none}.bar .ctrl{margin-right:auto}.bar #dateLbl{display:none}.bar .thm{font-size:10px;padding:7px 10px}.account-btn{padding:8px 12px;font-size:11px}main{padding:23px 16px 100px}.hero-layout{padding:4px 0 14px}.hero-layout h1{font-size:37px}.hero-layout p{font-size:12px}.hero-badge{display:none}.hero-layout .eyebrow{margin-bottom:10px}.discover-stock{padding:14px}.discover-stock strong{font-size:22px}.discover-strip{gap:9px}.card{padding:18px}.hprice .px{font-size:46px}.hhead .hh h1{font-size:22px}.hact{margin-left:0}.hgrid{gap:12px}.hr{grid-template-columns:1fr}.tabs{margin-bottom:18px;gap:2px}.tabs button{font-size:12px;padding:12px 9px}.kpi .v{font-size:27px}.side .nav a{padding:8px 5px;border-radius:12px;font-size:10px}.side .nav a.on{background:var(--accent-bg)}#hsChart svg,#bdChart svg{min-height:190px}.auth-modal{padding:25px}.quickpaths{gap:7px}.quickpaths button,.quickpaths a{font-size:11px;padding:8px 12px}.pgt{font-size:28px}.hhead{padding-top:0}.hero-layout h1 em{display:block}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{animation:none!important;transition:none!important}}
+
+.chart-readout{font-size:12px;line-height:1.8;min-height:28px;color:var(--muted);padding:5px 8px;overflow-wrap:anywhere}@media(max-width:500px){.chart .tp{display:none}.bar{flex-wrap:nowrap}.bar select{max-width:135px}.bar .ctrl{min-width:0}}
 </style>
 </head>
 <body>
 <div class="shell" id="shell">
 <aside class="side" id="side" aria-label="Ana menü">
-  <div class="sidehead"><a class="brand" href="#/" aria-label="BIST Gün Sonu, ana sayfa"><svg class="lm" viewBox="0 0 48 48" width="34" height="34" aria-hidden="true"><defs><linearGradient id="lg1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5b8cff"/><stop offset="1" stop-color="#2748c9"/></linearGradient></defs><rect width="48" height="48" rx="12" fill="url(#lg1)"/><path class="tw t1" fill="#fff" fill-rule="evenodd" d="M9 41h30v-3H37V29H11v9H9ZM15 38v-4a2 2 0 0 1 4 0v4Z M22 38v-4a2 2 0 0 1 4 0v4Z M29 38v-4a2 2 0 0 1 4 0v4Z"/><rect class="tw t2" x="14.5" y="26" width="19" height="3" rx="1" fill="#fff" opacity=".92"/><path class="tw t3" fill="#fff" fill-rule="evenodd" d="M18 26V14h12v12ZM24 15.8a4.2 4.2 0 1 0 0 8.4 4.2 4.2 0 1 0 0-8.4Z"/><path class="tw t4" fill="#fff" d="M16.5 14.5 19 10h10l2.5 4.5Z"/><path class="tw t5" fill="#fff" d="M19.5 10a4.5 4.5 0 0 1 9 0Z"/><rect class="tw t6" x="23.4" y="2.6" width="1.2" height="3" fill="#fff"/><circle class="tw t6" cx="24" cy="2.4" r="1.1" fill="#fff"/><g class="hands" stroke="#fff" stroke-linecap="round"><line class="mh" x1="24" y1="20" x2="24" y2="16.7" stroke-width="1.15" transform="rotate(-55 24 20)"/><line class="hh" x1="24" y1="20" x2="24" y2="22.4" stroke-width="1.5" transform="rotate(12 24 20)"/></g><circle cx="24" cy="20" r=".9" fill="#fff"/></svg><span class="bn">BIST<br><span>Gün Sonu</span></span></a>
+  <div class="sidehead"><a class="brand" href="#/" aria-label="SBC Borsa Bülten, ana sayfa"><svg class="lm" viewBox="0 0 48 48" width="34" height="34" aria-hidden="true"><defs><linearGradient id="lg1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5b8cff"/><stop offset="1" stop-color="#2748c9"/></linearGradient></defs><rect width="48" height="48" rx="12" fill="url(#lg1)"/><path class="tw t1" fill="#fff" fill-rule="evenodd" d="M9 41h30v-3H37V29H11v9H9ZM15 38v-4a2 2 0 0 1 4 0v4Z M22 38v-4a2 2 0 0 1 4 0v4Z M29 38v-4a2 2 0 0 1 4 0v4Z"/><rect class="tw t2" x="14.5" y="26" width="19" height="3" rx="1" fill="#fff" opacity=".92"/><path class="tw t3" fill="#fff" fill-rule="evenodd" d="M18 26V14h12v12ZM24 15.8a4.2 4.2 0 1 0 0 8.4 4.2 4.2 0 1 0 0-8.4Z"/><path class="tw t4" fill="#fff" d="M16.5 14.5 19 10h10l2.5 4.5Z"/><path class="tw t5" fill="#fff" d="M19.5 10a4.5 4.5 0 0 1 9 0Z"/><rect class="tw t6" x="23.4" y="2.6" width="1.2" height="3" fill="#fff"/><circle class="tw t6" cx="24" cy="2.4" r="1.1" fill="#fff"/><g class="hands" stroke="#fff" stroke-linecap="round"><line class="mh" x1="24" y1="20" x2="24" y2="16.7" stroke-width="1.15" transform="rotate(-55 24 20)"/><line class="hh" x1="24" y1="20" x2="24" y2="22.4" stroke-width="1.5" transform="rotate(12 24 20)"/></g><circle cx="24" cy="20" r=".9" fill="#fff"/></svg><span class="bn">SBC<br><span>Borsa Bülten</span></span></a>
     <button class="ghost" id="menuBtn" type="button" aria-label="Menüyü daralt" aria-expanded="true" data-tip="Menüyü daralt/genişlet"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button></div>
   <button class="searchbtn" id="araBtn" type="button" aria-haspopup="dialog" aria-label="Ara" data-tip="Ara"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><span class="lbl">Ara</span><kbd class="lbl">/</kbd></button>
   <nav class="nav" id="nav" aria-label="Sayfalar"><a href="#/" data-r="home" data-tip="Gün Sonu" aria-label="Gün Sonu"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg><span class="lbl">Gün Sonu</span></a><a href="#/endeksler" data-r="endeksler" data-tip="Endeksler" aria-label="Endeksler"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M2 20h20"/></svg><span class="lbl">Endeksler</span></a><a href="#/byf" data-r="byf" data-tip="Borsa Yatırım Fonları" aria-label="Borsa Yatırım Fonları"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l9 5-9 5-9-5z"/><path d="M3 12.5l9 5 9-5"/><path d="M3 17l9 5 9-5"/></svg><span class="lbl">Borsa Yatırım Fonları</span></a><a href="#/izleme" data-r="izleme" data-tip="İzleme Listem" aria-label="İzleme Listem"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l2.8 5.7 6.2.9-4.5 4.4 1.1 6.2L12 17.3l-5.6 2.9 1.1-6.2L3 9.6l6.2-.9z"/></svg><span class="lbl">İzleme Listem</span></a><a href="#/karsilastir" data-r="karsilastir" data-tip="Karşılaştır" aria-label="Karşılaştır"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7h13M16 3l4 4-4 4M17 17H4M8 13l-4 4 4 4"/></svg><span class="lbl">Karşılaştır</span></a><a href="#/tarama" data-r="tarama" data-tip="Taramalar" aria-label="Taramalar"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h18l-7 8v6l-4-2v-4z"/></svg><span class="lbl">Taramalar</span></a><a href="#/takvim" data-r="takvim" data-tip="Takvim ve Halka Arz" aria-label="Takvim ve Halka Arz"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg><span class="lbl">Takvim ve Halka Arz</span></a><a href="#/araci" data-r="araci" data-tip="Aracı Kurumlar" aria-label="Aracı Kurumlar"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18M5 21V10M10 21V10M14 21V10M19 21V10M2 10l10-6 10 6z"/></svg><span class="lbl">Aracı Kurumlar</span></a></nav>
@@ -433,12 +444,18 @@
     <select id="date" aria-label="Rapor tarihi"></select>
     <span class="status live" title="Soru-cevap kutusunun kullandığı yerel model"><span class="dot" id="dot"></span><span id="statusText">kontrol ediliyor…</span></span>
   </div>
+  <button class="account-btn" id="accountBtn" type="button" aria-haspopup="dialog">Giriş yap</button>
   <button class="thm" id="thm" type="button" aria-label="Tema">Tema: Sistem</button>
 </header>
 <main>
   <h1 class="pgt" id="pgTitle"></h1>
 
   <div id="pgHome" class="pg">
+<section class="discovery" aria-label="Piyasayı keşfet">
+<div class="hero-layout"><div><div class="eyebrow">GÜNÜN FOTOĞRAFI · <span id="sbcReportDate">Veri yükleniyor</span></div><h1>Piyasaya bir adım<br><em>daha yakından bak.</em></h1><p>Günün hareketlerini keşfet. Hisseleri karşılaştır, geçmişi incele ve kendi izleme listeni oluştur.</p></div><div class="hero-badge"><b id="sbcDayCount">—</b><span>BÜLTENDEKİ HİSSE</span></div></div>
+<div class="quickpaths"><button type="button" id="sbcSearch">⌕ Hisse ara</button><button type="button" data-sbc-tab="hacim">Hacim hareketleri ↗</button><button type="button" data-sbc-tab="getiri">Getirileri karşılaştır</button><a href="#/izleme">☆ İzleme listem</a></div>
+<div class="discover-caption"><b>İşlem hacminde öne çıkanlar</b><span class="muted small">Seçili bülten günü</span></div><div class="discover-strip" id="sbcDiscoverStocks" aria-live="polite"></div>
+</section>
   <div class="tabwrap" data-key="home">
     <div class="tabs" role="tablist" aria-label="Gün Sonu bölümleri">
       <button role="tab" data-t="genel" aria-selected="true">Genel Bakış</button><button role="tab" data-t="hareket" aria-selected="false">Yükselenler ve Düşenler</button><button role="tab" data-t="hacim" aria-selected="false">Hacim Hareketleri</button><button role="tab" data-t="getiri" aria-selected="false">Getiri Karşılaştırması</button><button role="tab" data-t="hisseler" aria-selected="false">Tüm Hisseler</button>
@@ -1038,30 +1055,58 @@ document.addEventListener('error', (e) => {   // resim yuklenemezse (ag hatasi v
 }, true);
 
 /* ---------- grafikler (satır içi SVG) ---------- */
+function donemUzunlugu(tarihler, secim) {
+  if (secim >= 0) return Math.min(secim, tarihler.length);
+  if (!tarihler.length) return 0;
+  const son = new Date(tarihler[tarihler.length - 1] + 'T00:00:00Z');
+  const ay = son.getUTCMonth();
+  son.setUTCFullYear(son.getUTCFullYear() + secim);
+  if (son.getUTCMonth() !== ay) son.setUTCDate(0);
+  const hedef = son.toISOString().slice(0, 10);
+  const ilk = tarihler.findIndex((d) => d >= hedef);
+  return tarihler.length - (ilk < 0 ? 0 : ilk);
+}
 const fmtD = (iso, yil) => iso.slice(8, 10) + '.' + iso.slice(5, 7) + (yil ? '.' + iso.slice(2, 4) : '');
 function cizgi(el, pts, opt = {}) {
   const W = 720, H = opt.h || 250, pl = 56, pr = 12, pt = 12, pb = 26;
   if (!pts.length) { el.innerHTML = '<p class="muted">Veri yok</p>'; return; }
-  const ys = pts.map((p) => p[1]); let mn = Math.min(...ys), mx = Math.max(...ys);
+  const mum = opt.ohlc;
+  const ys = mum ? mum.flatMap((m, i) => m.every((v) => Number.isFinite(v) && v > 0) ? [m[1], m[2]] : [pts[i][1]]) : pts.map((p) => p[1]); let mn = Math.min(...ys), mx = Math.max(...ys);
   if (mn === mx) { mn -= 1; mx += 1; } const pad = (mx - mn) * .06; mn -= pad; mx += pad;
   const n = pts.length, X = (i) => pl + (W - pl - pr) * (n === 1 ? .5 : i / (n - 1)), Y = (v) => pt + (H - pt - pb) * (1 - (v - mn) / (mx - mn));
   const fmt = opt.fmt || ((v) => nf(v, 2)), lab = opt.lab || ((x) => x);
   const d = pts.map((p, i) => `${i ? 'L' : 'M'}${X(i).toFixed(1)} ${Y(p[1]).toFixed(1)}`).join('');
   let grid = ''; for (let k = 0; k <= 4; k++) { const v = mn + (mx - mn) * k / 4, y = Y(v); grid += `<line x1="${pl}" x2="${W - pr}" y1="${y.toFixed(1)}" y2="${y.toFixed(1)}" class="gl"/><text x="${pl - 6}" y="${(y + 4).toFixed(1)}" text-anchor="end" class="gt">${esc(fmt(v))}</text>`; }
   const xl = [0, Math.floor((n - 1) / 2), n - 1].filter((v, i, a) => a.indexOf(v) === i).map((i) => `<text x="${X(i).toFixed(1)}" y="${H - 6}" text-anchor="${i === 0 ? 'start' : i === n - 1 ? 'end' : 'middle'}" class="gt">${esc(lab(pts[i][0]))}</text>`).join('');
-  el.innerHTML = `<svg viewBox="0 0 ${W} ${H}" class="chart" role="img" aria-label="${esc(opt.aria || 'Grafik')}">${grid}${xl}<path d="${d}L${X(n - 1).toFixed(1)} ${H - pb}L${X(0).toFixed(1)} ${H - pb}Z" class="ar"/><path d="${d}" class="ln"/>
-    <line class="cx" y1="${pt}" y2="${H - pb}" x1="0" x2="0" hidden/><circle class="cc" r="4" hidden/><g class="tp" hidden><rect rx="6" width="170" height="${opt.extra ? 54 : 38}"/><text class="t1" x="8" y="16"></text><text class="t2" x="8" y="31"></text><text class="t3" x="8" y="46"></text></g></svg>`;
-  const svg = el.firstElementChild, cx = svg.querySelector('.cx'), cc = svg.querySelector('.cc'), tp = svg.querySelector('.tp');
-  const move = (e) => {
-    const rc = svg.getBoundingClientRect(), px = (e.clientX - rc.left) / rc.width * W;
-    const i = Math.max(0, Math.min(n - 1, Math.round((px - pl) / (W - pl - pr) * (n - 1)))), x = X(i), y = Y(pts[i][1]);
+  const bw = Math.max(.45, Math.min(12, (W - pl - pr) / n * .7));
+  const candles = mum ? mum.map((m, i) => {
+    if (!m.every((v) => Number.isFinite(v) && v > 0)) return `<circle cx="${X(i)}" cy="${Y(pts[i][1])}" r="1.5" fill="var(--muted)"/>`;
+    const [o, h, l, c] = m, renk = c >= o ? 'var(--up)' : 'var(--dn)';
+    return `<g><line x1="${X(i)}" x2="${X(i)}" y1="${Y(h)}" y2="${Y(l)}" stroke="${renk}"/><rect x="${X(i) - bw / 2}" y="${Math.min(Y(o), Y(c))}" width="${bw}" height="${Math.max(1, Math.abs(Y(o) - Y(c)))}" fill="${renk}"/></g>`;
+  }).join('') : '';
+  el.innerHTML = `<svg viewBox="0 0 ${W} ${H}" class="chart" role="img" aria-label="${esc(opt.aria || 'Grafik')}">${grid}${xl}${candles}<path style="display:${mum ? 'none' : ''}" d="${d}L${X(n - 1).toFixed(1)} ${H - pb}L${X(0).toFixed(1)} ${H - pb}Z" class="ar"/><path style="display:${mum ? 'none' : ''}" d="${d}" class="ln"/>
+    <line class="cx" y1="${pt}" y2="${H - pb}" x1="0" x2="0" hidden/><circle class="cc" r="4" hidden/><g class="tp" hidden><rect rx="6" width="290" height="${mum ? 76 : opt.extra ? 58 : 40}"/><text class="t1" x="8" y="16"></text><text class="t2" x="8" y="31"></text><text class="t3" x="8" y="46"></text><text class="t4" x="8" y="63"></text></g></svg>`;
+  const svg = el.querySelector('svg'), cx = svg.querySelector('.cx'), cc = svg.querySelector('.cc'), tp = svg.querySelector('.tp');
+  let activeIndex = n - 1;
+  const readout = document.createElement('div');readout.className='chart-readout';readout.setAttribute('aria-live','polite');
+  if(opt.extra){readout.textContent='Tarih ve fiyat için grafiğin üzerinde gezin veya dokun.';el.append(readout);}
+  svg.setAttribute('tabindex','0');
+  const showIndex = (i) => {
+    activeIndex = i;
+    const x = X(i), y = Y(pts[i][1]);
     cx.setAttribute('x1', x); cx.setAttribute('x2', x); cc.setAttribute('cx', x); cc.setAttribute('cy', y);
-    tp.setAttribute('transform', `translate(${Math.min(Math.max(x + 10, pl), W - pr - 170)} ${pt + 2})`);
-    tp.querySelector('.t1').textContent = lab(pts[i][0], true); tp.querySelector('.t2').textContent = fmt(pts[i][1]); tp.querySelector('.t3').textContent = opt.extra ? opt.extra(i) : '';
-    cx.hidden = cc.hidden = tp.hidden = false;
+    tp.setAttribute('transform', `translate(${Math.min(Math.max(x + 10, pl), W - pr - 290)} ${pt + 2})`);
+    tp.querySelector('.t1').textContent = lab(pts[i][0], true); tp.querySelector('.t2').textContent = (opt.extra ? 'Kapanış: ' : '') + fmt(pts[i][1]) + (opt.extra ? ' TL' : '');
+    const m = mum && mum[i];
+    tp.querySelector('.t3').textContent = m ? 'Açılış: ' + nf(m[0], 2) + ' · Yüksek: ' + nf(m[1], 2) : opt.extra ? opt.extra(i) : '';
+    tp.querySelector('.t4').textContent = m ? 'Düşük: ' + nf(m[2], 2) + ' · Kapanış: ' + nf(m[3], 2) : '';
+    [cx, cc, tp].forEach((x) => x.removeAttribute('hidden'));
+    if(opt.extra)readout.textContent=lab(pts[i][0],true)+' · Kapanış '+fmt(pts[i][1])+' TL'+(m?' · Açılış '+nf(m[0],2)+' · Yüksek '+nf(m[1],2)+' · Düşük '+nf(m[2],2):'');
   };
+  const move = (e) => {const rc=svg.getBoundingClientRect(),px=(e.clientX-rc.left)/rc.width*W;showIndex(Math.max(0,Math.min(n-1,Math.round((px-pl)/(W-pl-pr)*(n-1)))));};
+  svg.addEventListener('keydown',e=>{if(!['ArrowLeft','ArrowRight','Home','End'].includes(e.key))return;e.preventDefault();showIndex(e.key==='Home'?0:e.key==='End'?n-1:Math.max(0,Math.min(n-1,activeIndex+(e.key==='ArrowRight'?1:-1))));});
   svg.addEventListener('pointermove', move); svg.addEventListener('pointerdown', move);
-  svg.addEventListener('pointerleave', () => { cx.hidden = cc.hidden = tp.hidden = true; });
+  svg.addEventListener('pointerleave', () => { [cx, cc, tp].forEach((x) => x.setAttribute('hidden', '')); });
 }
 function sutun(el, vals, labels, colors) {
   const W = 720, H = 64, pl = 56, pr = 12, mx = Math.max(...vals, 1), bw = (W - pl - pr) / vals.length;
@@ -1179,7 +1224,7 @@ async function sayfaAraci() {
 }
 
 /* hisse sayfası */
-const hs = { n: 63 };
+const hs = { n: 63, tip: 'cizgi' };
 async function sayfaHisse(kod) {
   const box = $('hisseBody');
   if (!/^[A-Z0-9.]{2,12}$/.test(kod)) { box.className = 'card err'; box.textContent = 'Geçersiz hisse kodu.'; return; }
@@ -1214,7 +1259,7 @@ function renderHisse(x) {
   dl.push(['Son 20 günde tavana / tabana yakın', `${x.tavan20} / ${x.taban20} gün`], ['Ardışık tavan / taban serisi', `${x.tavan_seri} / ${x.taban_seri} gün`]);
   const son20 = sr.d.map((d, i) => ({ d, c: sr.c[i], g: sr.g[i], v: sr.v[i] })).slice(-20).reverse();
   const son = sr.d[sr.d.length - 1];
-  const fiyatH = `<section class="card"><div class="row" style="justify-content:space-between;margin-bottom:6px"><h2 style="margin:0">Fiyat ve hacim</h2><div class="rng" id="hsRng">${[['1A', 21], ['3A', 63], ['6A', 126], ['Tümü', 9999]].map(([l, n]) => `<button data-n="${n}" class="${hs.n === n ? 'on' : ''}">${l}</button>`).join('')}</div></div>
+  const fiyatH = `<section class="card"><div class="row" style="justify-content:space-between;margin-bottom:6px"><h2 style="margin:0">Fiyat ve hacim</h2><div class="rng" id="hsTip"><button data-tip="cizgi" class="${hs.tip === 'cizgi' ? 'on' : ''}">Çizgi</button><button data-tip="mum" class="${hs.tip === 'mum' ? 'on' : ''}">Mum</button></div><div class="rng" id="hsRng">${[['1A', 21], ['3A', 63], ['6A', 126], ['1Y', -1], ['3Y', -3], ['5Y', -5], ['Tümü', 9999]].map(([l, n]) => `<button data-n="${n}" class="${hs.n === n ? 'on' : ''}">${l}</button>`).join('')}</div></div>
       <div class="small" id="hsRet" style="margin:0 0 6px"></div><div id="hsChart"></div><div id="hsVol"></div>
       <p class="muted small" style="margin:8px 0 0">Alttaki çubuklar günlük hacim (mn TL); yeşil/kırmızı günlük değişim işareti. Fiyat serisi bölünme/bedelsiz için düzeltilmiştir, temettü düzeltmesi yoktur.</p></section>`;
   const limH = `<div class="gridp">
@@ -1245,13 +1290,14 @@ function renderHisse(x) {
   iliskiDoldur(x);
   if (MALI_LISTE.has(x.kod)) { const mb = box.querySelector('.tabs button[data-t="mali"]'); if (mb) mb.addEventListener('click', () => maliYukle(x.kod)); if (tabState.hisse === 'mali') maliYukle(x.kod); }
   const ciz = () => {
-    const n = Math.min(hs.n, sr.d.length), a = sr.d.length - n, pts = sr.d.slice(a).map((d, i) => [d, sr.c[a + i]]);
-    cizgi($('hsChart'), pts, { h: 230, fmt: (v) => nf(v, 2), lab: (d, tam) => tam ? trDate(d) : fmtD(d, n > 126), aria: x.kod + ' fiyat grafiği', extra: (i) => `${pct(sr.g[a + i])} gün · hacim ${nf(sr.v[a + i], 1)} mn` });
+    const n = donemUzunlugu(sr.d, hs.n), a = sr.d.length - n, pts = sr.d.slice(a).map((d, i) => [d, sr.c[a + i]]);
+    cizgi($('hsChart'), pts, { h: 230, fmt: (v) => nf(v, 2), lab: (d, tam) => tam ? trDate(d) : fmtD(d, n > 126), aria: x.kod + (hs.tip === 'mum' ? ' mum grafiği' : ' fiyat grafiği'), ohlc: hs.tip === 'mum' && sr.o ? sr.d.slice(a).map((_, i) => [sr.o[a + i], sr.h[a + i], sr.l[a + i], sr.c[a + i]]) : null, extra: (i) => `${pct(sr.g[a + i])} gün · hacim ${nf(sr.v[a + i], 1)} mn` });
     const ilk = pts[0][1], son = pts[pts.length - 1][1], gr = (son / ilk - 1) * 100;
     $('hsRet').innerHTML = `Seçili dönem getirisi (${trDate(pts[0][0])} → ${trDate(pts[pts.length - 1][0])}): <b class="${cls(gr)}">${pct(gr)}</b> <span class="muted">· günlük değişimden ayrıdır</span>`;
     sutun($('hsVol'), sr.v.slice(a), sr.d.slice(a).map(trDate), sr.g.slice(a).map((v) => col(v)));
   };
   ciz();
+  $('hsTip').onclick = (e) => { const b = e.target.closest('button'); if (!b) return; hs.tip = b.dataset.tip; [...$('hsTip').children].forEach((c) => c.classList.toggle('on', c === b)); ciz(); };
   $('hsRng').onclick = (e) => { const b = e.target.closest('button'); if (!b) return; hs.n = +b.dataset.n; [...$('hsRng').children].forEach((c) => c.classList.toggle('on', c === b)); ciz(); };
 }
 
@@ -1285,7 +1331,7 @@ function route() {
   document.querySelectorAll('#nav a').forEach((a) => a.classList.toggle('on', a.dataset.r === (pg === 'hisse' ? 'home' : pg)));
   document.body.dataset.page = pg === 'hisse' ? 'hisse' : pg;
   const hedef = geri ? (kaydirma[location.hash] || 0) : 0;
-  $('pgTitle').hidden = pg === 'hisse' || (pg === 'byf' && !!parts[1]); $('pgTitle').textContent = SAYFA_BASLIK[pg] || ''; document.title = (SAYFA_BASLIK[pg] ? SAYFA_BASLIK[pg] + ' · ' : '') + 'BIST Gün Sonu';
+  $('pgTitle').hidden = pg === 'hisse' || (pg === 'byf' && !!parts[1]); $('pgTitle').textContent = SAYFA_BASLIK[pg] || ''; document.title = (SAYFA_BASLIK[pg] ? SAYFA_BASLIK[pg] + ' · ' : '') + 'SBC Borsa Bülten';
   window.scrollTo(0, hedef);
   if (hedef) [150, 450, 900].forEach((ms) => setTimeout(() => { if (location.hash === (hashSon || '') && Math.abs(window.scrollY - hedef) > 4) window.scrollTo(0, hedef); }, ms));
   hashSon = location.hash; pgSon = pg;
@@ -1375,7 +1421,7 @@ async function sayfaKarsilastir(liste) {
   if (ortak.length < 5) { out.innerHTML = '<p class="muted">Bu hisselerin ortak işlem günü yeterli değil.</p>'; return; }
   const idx = ser.map((x) => Object.fromEntries(x.d.map((d, i) => [d, x.c[i]])));
   const sec = $('kcRng') ? +$('kcRng').dataset.n : 126;
-  const N = Math.min(sec, ortak.length), gunler = ortak.slice(-N);
+  const N = donemUzunlugu(ortak, sec), gunler = ortak.slice(-N);
   const nor = kodlar.map((k, j) => gunler.map((d) => idx[j][d] / idx[j][gunler[0]] * 100));
   const W = 720, H = 280, pl = 48, pr = 84, pt = 12, pb = 26, all = nor.flat(); let mn = Math.min(...all), mx = Math.max(...all); const pd = (mx - mn) * .06 || 1; mn -= pd; mx += pd;
   const X = (i) => pl + (W - pl - pr) * i / (N - 1), Y = (v) => pt + (H - pt - pb) * (1 - (v - mn) / (mx - mn));
@@ -1386,7 +1432,7 @@ async function sayfaKarsilastir(liste) {
   const yol = nor.map((s, j) => `<path class="cl" data-j="${j}" d="${s.map((v, i) => `${i ? 'L' : 'M'}${X(i).toFixed(1)} ${Y(v).toFixed(1)}`).join('')}" fill="none" stroke="${RENK[j]}" stroke-width="2"/>`).join('') + etk;
   const bt = (r) => `<button data-n="${r[1]}" class="${r[1] === sec ? 'on' : ''}">${r[0]}</button>`;
   const getiri = nor.map((s) => s[s.length - 1] - 100);
-  out.innerHTML = `<div class="row" style="justify-content:space-between;margin-bottom:6px"><span class="muted small">${trDate(gunler[0])} = 100 → ${trDate(gunler[N - 1])}</span><div class="rng" id="kcRng" data-n="${sec}">${[['1A', 21], ['3A', 63], ['6A', 126], ['1Y', 250]].map(bt).join('')}</div></div>
+  out.innerHTML = `<div class="row" style="justify-content:space-between;margin-bottom:6px"><span class="muted small">${trDate(gunler[0])} = 100 → ${trDate(gunler[N - 1])}</span><div class="rng" id="kcRng" data-n="${sec}">${[['1A', 21], ['3A', 63], ['6A', 126], ['1Y', -1], ['3Y', -3], ['5Y', -5]].map(bt).join('')}</div></div>
     <div class="cmpsum">${kodlar.map((k, j) => `<div class="cs" style="border-left-color:${RENK[j]}"><b>${esc(k)}</b><span class="${cls(getiri[j])}">${pct(getiri[j])}</span></div>`).join('')}</div>
     <svg viewBox="0 0 ${W} ${H}" class="chart" id="kcSvg" role="img" aria-label="Normalize karşılaştırma grafiği">${g}<line x1="${pl}" x2="${W - pr}" y1="${yl}" y2="${yl}" stroke="var(--neu)" stroke-dasharray="4 4"/>${yol}<line class="cx" y1="${pt}" y2="${H - pb}" hidden/><g class="tp" hidden></g></svg>
     <div class="lg">${kodlar.map((k, j) => `<span><i style="background:${RENK[j]}"></i><b>${esc(k)}</b> ${esc(ad[k] || '')}</span>`).join('')}</div>
@@ -1509,7 +1555,7 @@ async function sayfaIzleme() {
   const box = $('izlemeBody'), l = IZ.oku(); const lst = await veri('data/hisse_liste.json', box); if (!lst) return;
   box.className = '';
   const m = Object.fromEntries(lst.map((x) => [x.kod, x])), rows = l.map((k) => m[k]).filter(Boolean);
-  box.innerHTML = rows.length ? `<section class="card"><h2>İzleme listem <span class="muted small">· ${rows.length} hisse · bu tarayıcıda saklanır</span></h2><div class="tw"><table><thead><tr><th>Hisse</th><th class="opt">Şirket</th><th class="r">Kapanış</th><th class="r">Değişim</th><th class="r">Hacim (mn TL)</th><th></th></tr></thead><tbody>${rows.map((x) => `<tr><td>${kodLink(x.kod)}</td><td class="opt">${esc(ad2(x.kod, x.ad))}</td><td class="r">${nf(x.kap, 2)}</td><td class="r ${cls(x.deg)}">${arrow(x.deg)} ${pct(x.deg)}</td><td class="r">${nf(x.hac_mn, 1)}</td><td class="r"><button class="link" data-iz="${esc(x.kod)}" aria-label="${esc(x.kod)} izlemeden çıkar">Kaldır</button></td></tr>`).join('')}</tbody></table></div></section>` : `<section class="card bos"><svg viewBox="0 0 120 84" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="muted" aria-hidden="true"><rect x="6" y="10" width="108" height="64" rx="8" opacity=".35"/><path d="M18 58l22-18 16 12 24-26 22 14" stroke="var(--accent)"/><path d="M86 18l2.6 5.2 5.8.8-4.2 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z" fill="var(--accent)" stroke="none"/></svg><h2 style="margin-bottom:6px">İzleme listen boş</h2><p class="muted" style="margin:0 auto;max-width:460px">Üstteki aramadan bir hisse bul, hisse sayfasında <b>☆ İzle</b> düğmesine bas. Liste yalnızca bu tarayıcıda saklanır, sunucuya gitmez.</p></section>`;
+  box.innerHTML = rows.length ? `<section class="card"><h2>İzleme listem <span class="muted small">· ${rows.length} hisse · ${SBC.user ? 'hesabına kaydedilir' : 'bu tarayıcıda saklanır'}</span></h2><div class="tw"><table><thead><tr><th>Hisse</th><th class="opt">Şirket</th><th class="r">Kapanış</th><th class="r">Değişim</th><th class="r">Hacim (mn TL)</th><th></th></tr></thead><tbody>${rows.map((x) => `<tr><td>${kodLink(x.kod)}</td><td class="opt">${esc(ad2(x.kod, x.ad))}</td><td class="r">${nf(x.kap, 2)}</td><td class="r ${cls(x.deg)}">${arrow(x.deg)} ${pct(x.deg)}</td><td class="r">${nf(x.hac_mn, 1)}</td><td class="r"><button class="link" data-iz="${esc(x.kod)}" aria-label="${esc(x.kod)} izlemeden çıkar">Kaldır</button></td></tr>`).join('')}</tbody></table></div></section>` : `<section class="card bos"><svg viewBox="0 0 120 84" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="muted" aria-hidden="true"><rect x="6" y="10" width="108" height="64" rx="8" opacity=".35"/><path d="M18 58l22-18 16 12 24-26 22 14" stroke="var(--accent)"/><path d="M86 18l2.6 5.2 5.8.8-4.2 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z" fill="var(--accent)" stroke="none"/></svg><h2 style="margin-bottom:6px">İzleme listen boş</h2><p class="muted" style="margin:0 auto;max-width:460px">Üstteki aramadan bir hisse bul, hisse sayfasında <b>☆ İzle</b> düğmesine bas. ${SBC.user ? 'Listen hesabına kaydedilir.' : 'Misafir listen bu tarayıcıda saklanır. Giriş yaparak hesabına aktarabilirsin.'}</p></section>`;
 }
 
 /* ---------- borsa yatırım fonları (BYF) ---------- */
@@ -1585,12 +1631,12 @@ async function sayfaByfDetay(kod) {
     <div class="hhead"><div class="hh">${rozet(x.kod, 'l')}<div><h1>${esc(x.kod)}</h1><span class="ad">${esc(x.ad)}</span></div></div>
       <div class="hprice"><span class="px">${nf(x.kap, 2)} <span style="font-size:14px;font-weight:500" class="muted">TL</span></span><span class="${cls(x.deg)}" style="font-weight:650">${arrow(x.deg)} ${pct(x.deg)}</span><span class="muted small">${trDate(x.tarih)}</span></div></div>
     <div class="tags"><span class="flag">Borsa yatırım fonu</span><span class="flag">${esc(x.tur)}</span><span class="flag">${esc(x.yonetici)}</span></div>
-    <div class="hgrid"><div class="hl"><section class="card"><div class="row" style="justify-content:space-between;margin-bottom:6px"><h2 style="margin:0">Fiyat ve hacim</h2><div class="rng" id="bdRng">${[['1A', 21], ['3A', 63], ['6A', 126], ['Tümü', 9999]].map(([l, n]) => `<button data-n="${n}" class="${bd.n === n ? 'on' : ''}">${l}</button>`).join('')}</div></div>
+    <div class="hgrid"><div class="hl"><section class="card"><div class="row" style="justify-content:space-between;margin-bottom:6px"><h2 style="margin:0">Fiyat ve hacim</h2><div class="rng" id="bdRng">${[['1A', 21], ['3A', 63], ['6A', 126], ['1Y', -1], ['3Y', -3], ['5Y', -5], ['Tümü', 9999]].map(([l, n]) => `<button data-n="${n}" class="${bd.n === n ? 'on' : ''}">${l}</button>`).join('')}</div></div>
       <div class="small" id="bdRet" style="margin:0 0 6px"></div><div id="bdChart"></div><div id="bdVol"></div>
       <p class="muted small" style="margin:8px 0 0">Alttaki çubuklar günlük işlem hacmi (mn TL); yeşil/kırmızı günlük değişim işareti. Fiyat serisi borsadaki kapanış fiyatıdır (fon pay değeri değildir).</p></section></div>
       <aside class="hr"><section class="card"><h2>Günün temel verileri</h2><dl class="kv"><div><dt>Kapanış</dt><dd>${nf(x.kap, 2)} TL</dd></div><div><dt>Günlük değişim</dt><dd class="${cls(x.deg)}">${arrow(x.deg)} ${pct(x.deg)}</dd></div><div><dt>İşlem hacmi</dt><dd>${nf(x.hac_mn, 2)} mn TL</dd></div><div><dt>Önceki işlem günü hacmi</dt><dd>${x.phac_mn == null ? '–' : nf(x.phac_mn, 2) + ' mn TL'}</dd></div><div><dt>Hacim değişimi</dt><dd>${x.hfark == null ? '–' : pctN(x.hfark, 0) + ' %'}</dd></div><div><dt>20 günlük ort. hacim</dt><dd>${x.hac_ort20_mn == null ? '–' : nf(x.hac_ort20_mn, 2) + ' mn TL'}</dd></div><div><dt>Göreli hacim (20 gün)</dt><dd>${x.hac_oran == null ? '–' : nf(x.hac_oran, 1) + '×'}</dd></div><div><dt>İşlem adedi</dt><dd>${x.adet == null ? '–' : nf(x.adet)}</dd></div><div><dt>İlk veri tarihi</dt><dd>${trDate(x.ilk_tarih)}</dd></div></dl></section>
       <section class="card"><h2>Getiriler <span class="muted small">· fiyat getirisi (%)</span></h2><dl class="kv">${gl.map(([k, l]) => `<div><dt>${l}</dt><dd>${byfHucre(k, g[k])}</dd></div>`).join('')}</dl></section></aside></div>`;
-  const ciz = () => { const n = Math.min(bd.n, sr.d.length), a = sr.d.length - n, pts = sr.d.slice(a).map((d, i) => [d, sr.c[a + i]]);
+  const ciz = () => { const n = donemUzunlugu(sr.d, bd.n), a = sr.d.length - n, pts = sr.d.slice(a).map((d, i) => [d, sr.c[a + i]]);
     cizgi($('bdChart'), pts, { h: 230, fmt: (v) => nf(v, 2), lab: (d, tam) => tam ? trDate(d) : fmtD(d, n > 126), aria: x.kod + ' fiyat grafiği', extra: (i) => `${pct(sr.g[a + i])} gün · hacim ${nf(sr.v[a + i], 2)} mn` });
     const gr = (pts[pts.length - 1][1] / pts[0][1] - 1) * 100; $('bdRet').innerHTML = `Seçili dönem getirisi (${trDate(pts[0][0])} → ${trDate(pts[pts.length - 1][0])}): <b class="${cls(gr)}">${pct(gr)}</b>`;
     sutun($('bdVol'), sr.v.slice(a), sr.d.slice(a).map(trDate), sr.g.slice(a).map((v) => col(v))); };
@@ -1657,9 +1703,76 @@ document.addEventListener('keydown', (e) => {
   else if (e.key === '/' && !e.ctrlKey && !e.metaKey && !e.altKey && !yaziyor && $('araModal').hidden && !document.querySelector('dialog[open]')) { e.preventDefault(); araAc(); }
 });
 
-if (STATIC) { document.querySelectorAll('.live').forEach((x) => x.hidden = true); } else checkStatus();
+if (STATIC || !SOHBET_ACIK) { document.querySelectorAll('.live').forEach((x) => x.hidden = true); } else checkStatus();
 ikonYukle().then(() => { anaHazir = loadDates(); route(); });
 initChat();
+</script>
+<dialog class="auth-modal" id="sbcDialog" aria-label="SBC hesap ve yönetim"></dialog>
+<script>
+/* SBC account and discovery workspace */
+const SBC = { user:null, list:[], setup:false, available:false, mode:'login', queue:Promise.resolve() };
+function sbcToast(message) {
+  document.querySelector('.toast-sbc')?.remove();
+  const t=document.createElement('div');t.className='toast-sbc';t.role='status';t.textContent=message;document.body.append(t);setTimeout(()=>t.remove(),5000);
+}
+async function sbcRequest(path,method='GET',body) {
+  const r=await fetch('/api/account/'+path,{method,headers:body?{'Content-Type':'application/json'}:{},credentials:'same-origin',body:body?JSON.stringify(body):undefined,cache:'no-store'});
+  const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(typeof d.detail==='string'?d.detail:'İşlem tamamlanamadı. Alanları kontrol et.');return d;
+}
+function sbcAccountLabel(){
+  const b=$('accountBtn');b.textContent=SBC.user?SBC.user.name:SBC.setup?'Hesabını kur':'Giriş yap';
+  b.setAttribute('aria-label',SBC.user?'Hesabım':'Hesap ve giriş');
+}
+async function sbcInit(){
+  if(!STATIC){try{const s=await sbcRequest('status');SBC.available=true;SBC.setup=s.setup;SBC.user=s.user;SBC.list=s.user?.watchlist||[];}catch{}}
+  sbcAccountLabel();
+  if(pgSon==='izleme')sayfaIzleme();
+}
+function sbcSetUser(u){SBC.user=u;SBC.list=[...u.watchlist];SBC.setup=false;sbcAccountLabel();if(pgSon==='izleme')sayfaIzleme();if(pgSon==='hisse')sayfaHisse(decodeURIComponent(location.hash.split('/')[2]||''));}
+function sbcDialog(mode){
+  SBC.mode=mode|| (SBC.user?'profile':SBC.setup?'setup':'login');const d=$('sbcDialog');
+  let content='';
+  if(!SBC.available){content='<div class="eyebrow">SBC HESAP</div><h2>Kendi piyasa alanın.</h2><p>Bu statik yayın misafir olarak kullanılabilir. Hesap ve yönetim özellikleri uygulamanın sunuculu sürümünde çalışır.</p><p>Bu bilgisayardaki hesaplı sürüm: <a href="http://127.0.0.1:8875/">Uygulamayı aç →</a></p>';}
+  else if(SBC.user){content=`<div class="eyebrow">HESABIM</div><h2>${esc(SBC.user.name)}</h2><p>${esc(SBC.user.email)}<br>${SBC.user.role==='admin'?'Yönetici hesabı':'Kişisel hesap'} · ${SBC.list.length} izlenen hisse</p><p>İzleme listen bu hesaba bağlı olarak sunucuda saklanır. Misafir listen bu tarayıcıda korunur.</p><button type="button" class="primary" id="sbcImport">Misafir listemi ve yedeğimi aktar</button>${SBC.user.role==='admin'?'<button type="button" id="sbcAdmin" style="width:100%;margin-bottom:10px">Yönetim paneli</button>':''}<button type="button" id="sbcLogout" style="width:100%">Çıkış yap</button>`;}
+  else{const setup=SBC.mode==='setup',reg=SBC.mode==='register';content=`<div class="eyebrow">${setup?'İLK KURULUM':'SBC BORSA BÜLTEN'}</div><h2>${setup?'Kendi alanını oluştur.':reg?'Piyasayı kendi listenle izle.':'Yeniden hoş geldin.'}</h2><p>${setup?'Bu bilgisayardaki ilk yönetici hesabını oluştur. Parolanı yalnızca sen belirlersin.':reg?'İzleme listeni hesabına kaydet. Piyasa ekranları giriş yapmadan da kullanılabilir.':'İzleme listene ve kişisel çalışma alanına devam et.'}</p><form id="sbcForm">${setup||reg?'<label>Adın<input name="name" autocomplete="name" maxlength="80" required></label>':''}<label>E-posta<input name="email" type="email" autocomplete="username" maxlength="254" required></label><label>Parola<input name="password" type="password" autocomplete="${setup||reg?'new-password':'current-password'}" minlength="12" maxlength="128" required></label><p class="small">En az 12 karakter. Bu sürümde e-posta doğrulama ve e-postayla parola sıfırlama bulunmuyor.</p><button type="submit" class="primary">${setup?'Yönetici hesabını oluştur':reg?'Hesap oluştur':'Giriş yap'}</button></form>${setup?'':`<button type="button" class="link" id="sbcSwitch">${reg?'Zaten hesabım var':'Yeni hesap oluştur'}</button>`}`;}
+  if(!SBC.available && !['localhost','127.0.0.1'].includes(location.hostname))content=content.replace(/<p>Bu bilgisayardaki hesaplı sürüm:[\s\S]*?<\/p>/,'<p>Hesap özellikleri için sunuculu sürümün yayına alınması gerekir.</p>');
+  d.innerHTML='<button class="auth-close" aria-label="Kapat" type="button">×</button>'+content+'<div id="sbcFeedback" class="auth-feedback" role="status" aria-live="polite"></div>';
+  d.querySelector('.auth-close').onclick=()=>d.close();
+  if(!d.open)d.showModal();
+  $('sbcSwitch')?.addEventListener('click',()=>sbcDialog(SBC.mode==='register'?'login':'register'));
+  $('sbcForm')?.addEventListener('submit',async(e)=>{e.preventDefault();const btn=e.target.querySelector('[type="submit"]');btn.disabled=true;const form=new FormData(e.target);try{const r=await sbcRequest(SBC.mode,'POST',Object.fromEntries(form));sbcSetUser(r.user);sbcDialog('profile');sbcToast('Hesabın hazır.');}catch(err){$('sbcFeedback').textContent=err.message;}finally{btn.disabled=false;}});
+  $('sbcLogout')?.addEventListener('click',async()=>{try{await SBC.queue;await sbcRequest('logout','POST');SBC.user=null;SBC.list=[];sbcAccountLabel();d.close();if(pgSon==='izleme')sayfaIzleme();if(pgSon==='hisse')sayfaHisse(location.hash.split('/')[2]);sbcToast('Çıkış yapıldı. Misafir listen korunuyor.');}catch(err){$('sbcFeedback').textContent=err.message;}});
+  $('sbcImport')?.addEventListener('click',async()=>{let guest=[],backup=[];try{guest=JSON.parse(localStorage.getItem('izleme')||'[]');backup=JSON.parse(localStorage.getItem('sbc-watchlist-backup-'+SBC.user.id)||'[]');}catch{}const ok=await IZ.yaz([...new Set([...SBC.list,...guest,...backup])]);sbcDialog('profile');if(ok)sbcToast('İzleme listelerin birleştirildi ve kaydedildi.');});
+  $('sbcAdmin')?.addEventListener('click',sbcAdmin);
+}
+async function sbcAdmin(){
+  try{const a=await sbcRequest('admin');const d=$('sbcDialog');d.innerHTML=`<button class="auth-close" aria-label="Kapat" type="button">×</button><div class="eyebrow">YÖNETİM</div><h2>Her şey yerli yerinde.</h2><p>Son veri: ${a.latest?trDate(a.latest):'Veri yok'} · ${esc(a.mode)}</p><div class="admin-grid">${[['Hisse',a.stocks],['Borsa yatırım fonu',a.funds],['Yayınlanan bülten',a.reports],['Kullanıcı',a.users],['Açık oturum',a.sessions]].map(([l,v])=>`<div class="admin-stat">${l}<b>${nf(v,0)}</b></div>`).join('')}</div><p>Piyasa verileri bu panelden değiştirilmez. Beş yıllık grafik arşivi, günlük bültenler ve hesaplar ayrı tutulur.</p><button type="button" id="sbcProfileBack">Hesabıma dön</button>`;d.querySelector('.auth-close').onclick=()=>d.close();$('sbcProfileBack').onclick=()=>sbcDialog('profile');}catch(err){sbcToast(err.message);}
+}
+const sbcGuestRead=IZ.oku.bind(IZ),sbcGuestWrite=IZ.yaz.bind(IZ);
+IZ.oku=function(){return SBC.user?[...SBC.list]:sbcGuestRead();};
+IZ.yaz=function(list){
+  if(!SBC.user){sbcGuestWrite(list);return;}
+  const id=SBC.user.id;const saved=[...new Set(list)];if(saved.length>200){sbcToast('Hesap listesi en fazla 200 hisse alabilir. Mevcut listen korunuyor.');return Promise.resolve(false);}SBC.list=saved;
+  try{localStorage.setItem('sbc-watchlist-backup-'+id,JSON.stringify(saved));}catch{}
+  SBC.queue=SBC.queue.catch(()=>{}).then(()=>sbcRequest('watchlist','PUT',{symbols:saved,user_id:id})).then(()=>true).catch(()=>{sbcToast('Liste bu tarayıcıda yedeklendi; sunucuya kaydedilemedi. Hesabından yeniden aktarabilirsin.');return false;});return SBC.queue;
+};
+function sbcTab(tab){tabState.home=tab;tabSecim(document.querySelector('.tabwrap[data-key="home"]'),tab);location.hash='#/';window.scrollTo({top:0,behavior:'smooth'});}
+function sbcDiscovery(){
+  if(!data)return;
+  $('sbcReportDate').textContent=trDate(cur);
+  const stocks=[...(data.stocks||[])].filter(s=>!s.kod.includes('.')).sort((a,b)=>b.hac-a.hac).slice(0,4);
+  $('sbcDayCount').textContent=nf((data.stocks||[]).length,0);
+  $('sbcDiscoverStocks').innerHTML=stocks.map(s=>`<a class="discover-stock" href="#/hisse/${encodeURIComponent(s.kod)}"><div class="row"><b>${esc(s.kod)}</b><span class="${cls(s.deg)}">${pct(s.deg)}</span></div><strong>${nf(s.kap,2)} <span class="muted small">TL</span></strong><small>${esc(ad2(s.kod,s.ad))}</small><div class="muted small" style="margin-top:10px">${nf(s.hac,1)} mn TL hacim</div></a>`).join('');
+}
+const sbcOriginalRender=renderGunSonu;
+renderGunSonu=function(){sbcOriginalRender();sbcDiscovery();};
+document.querySelectorAll('[data-sbc-tab]').forEach(b=>b.onclick=()=>sbcTab(b.dataset.sbcTab));
+$('sbcSearch').onclick=()=>$('araBtn').click();
+$('accountBtn').onclick=()=>sbcDialog();
+$('sbcDialog').addEventListener('click',e=>{if(e.target===$('sbcDialog')){const r=e.target.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)e.target.close();}});
+sbcInit();
+if(data)sbcDiscovery();
+
 </script>
 </body>
 </html>
